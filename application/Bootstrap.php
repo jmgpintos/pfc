@@ -17,7 +17,7 @@ class Bootstrap
 //            echo $controller;
             
             $controller = new $controller; //Instancia un nuevo controlador del tipo solicitado 
-            //                             //(el warning es porque el controlador principal es abstracto)
+            //                             //(el warning es porque el controlador principal es abstracto, pero funciona porque estamos instanciando un objeto de alguna clase heredada)
             
 //            var_dump (get_object_vars($controller));
             

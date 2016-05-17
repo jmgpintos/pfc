@@ -1,0 +1,25 @@
+<h2>Últimos Posts</h2>
+<pre><?php //print_r($this->posts); ?></pre>
+<?php if (isset($this->posts) && count($this->posts)): ?>
+    <table>
+        <thead>
+            <tr>
+                <?php for ($i = 0; $i < count($this->columnas); $i++): ?>
+                    <th><?php echo $this->columnas[$i]; ?></th>
+                <?php endfor; ?>
+            </tr>    
+        </thead>
+        <?php for ($i = 0; $i < count($this->posts); $i++): ?>
+            <tr>
+                <td><?php echo $this->posts[$i]['id'] ?></td>
+                <td><?php echo $this->posts[$i]['titulo'] ?></td>
+                <td><?php echo $this->posts[$i]['cuerpo'] ?></td>
+            </tr>
+        <?php endfor; ?>
+    </table>
+<?php else: ?>
+No hay posts
+<?php endif; ?>
+
+<p><a href="<?php BASE_URL;?>post/nuevo">Agregar post</a></p>
+

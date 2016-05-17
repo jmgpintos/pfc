@@ -1,5 +1,9 @@
 <?php
 
+/*
+ * Clase Controller, de la que heredan todos los controladores
+ */
+
 abstract class Controller
 {
 
@@ -29,11 +33,41 @@ abstract class Controller
     protected function getLibrary($libreria)
     {
         $rutaLibreria = ROOT . 'libs' . DS . $libreria . '.php';
-        if(is_readable($rutaLibreria)){
+        if (is_readable($rutaLibreria)) {
             require_once $rutaLibreria;
-            
-        }else{
+        } else {
             throw new Exception("Error al cargar libreria $libreria");
+        }
+    }
+
+    protected function getTexto($clave)
+    {
+        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
+            $_POST[$clave] = htmlspecialchars($_POST[$clave], ENT_QUOTES); //TODO explicar
+            return $_POST[$clave];
+        }
+
+        return '';
+    }
+
+    protected function getInt($clave)
+    {
+        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
+            $_POST[$clave] = filter_input(INPUT_POST, $clave, FILTER_VALIDATE_INT); //TODO explicar
+            return $_POST[$clave];
+        }
+
+        return 0;
+    }
+
+    protected function redireccionar($ruta = false)
+    {
+        if ($ruta) {
+            header('location:' . BASE_URL . $ruta);
+            exit;
+        } else {
+            header('location:' . BASE_URL);
+            exit;
         }
     }
 
