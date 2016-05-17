@@ -16,15 +16,18 @@ require_once APP_PATH . 'Model.php';
 require_once APP_PATH . 'View.php';
 require_once APP_PATH . 'Registro.php';
 require_once APP_PATH . 'Database.php';
+require_once APP_PATH . 'Session.php';
 
 require_once LIB_PATH . 'helpers/helper-functions.php';
 
+Session::init();
+
 $r = new Request();
 
-echo $r->getControlador().'<br/>';
-echo $r->getMetodo().'<br/>';
-print_r($r->getArgs());
-
+put($r->getControlador());
+put($r->getMetodo());
+vardump($r->getArgs());
+vardump(info_sesion());
 try {
 //    puty(__FILE__);
 

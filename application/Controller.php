@@ -42,7 +42,7 @@ abstract class Controller
 
     protected function getTexto($clave)
     {
-        //No utilizar con preparepra insertar datos
+        //No utilizar con prepare para insertar datos
         if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
             $_POST[$clave] = htmlspecialchars($_POST[$clave], ENT_QUOTES); //TODO explicar
             return $_POST[$clave];

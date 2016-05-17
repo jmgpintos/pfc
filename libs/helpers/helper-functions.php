@@ -58,18 +58,20 @@ if (!function_exists('vardump')) {
 
     function vardump($msg = null)
     {
-        $args = func_get_args();
-        if (is_string($msg)) {
-            array_shift($args); // remove msg from the args array
-            $msg = "<b>$msg</b>\n";
-        } else {
-            $msg = "";
+        if (DEBUG) {
+            $args = func_get_args();
+            if (is_string($msg)) {
+                array_shift($args); // remove msg from the args array
+                $msg = "<b>$msg</b>\n";
+            } else {
+                $msg = "";
+            }
+
+
+            echo "<pre>$msg";
+            var_dump($args);
+            echo "</pre>";
         }
-
-
-        echo "<pre>$msg";
-        var_dump($args);
-        echo "</pre>";
     }
 
 }
@@ -88,7 +90,9 @@ if (!function_exists('put')) {
 
     function put($text = 'xxx')
     {
-        echo "<pre>$text</pre>\n";
+        if (DEBUG) {
+            echo "<pre>$text</pre>\n";
+        }
     }
 
 }

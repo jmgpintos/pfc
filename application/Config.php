@@ -1,5 +1,7 @@
 <?php
 
+define('DEBUG', true);
+
 define('BASE_URL', 'http://localhost/bi/'); //Para acceder a archivos desde las vistas
 define('DEFAULT_CONTROLLER', 'index');
 define('DEFAULT_LAYOUT', 'default');
