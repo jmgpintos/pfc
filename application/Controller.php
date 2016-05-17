@@ -42,6 +42,7 @@ abstract class Controller
 
     protected function getTexto($clave)
     {
+        //No utilizar con preparepra insertar datos
         if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
             $_POST[$clave] = htmlspecialchars($_POST[$clave], ENT_QUOTES); //TODO explicar
             return $_POST[$clave];
@@ -71,4 +72,21 @@ abstract class Controller
         }
     }
 
+    protected function filtrarInt($int)
+    {
+        $int = (int) $int;
+        
+        if(is_int($int)){
+            return $int;
+        }else{
+            return 0;
+        }
+    }
+    
+    protected function getPostParam($clave)
+    {
+        if(isset($_POST[$clave])){
+            return $_POST[$clave];
+        }
+    }
 }

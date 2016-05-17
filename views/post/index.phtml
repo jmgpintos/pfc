@@ -14,6 +14,8 @@
                 <td><?php echo $this->posts[$i]['id'] ?></td>
                 <td><?php echo $this->posts[$i]['titulo'] ?></td>
                 <td><?php echo $this->posts[$i]['cuerpo'] ?></td>
+                <td><a href="<?php echo BASE_URL . 'post/editar/' . $this->posts[$i]['id'] ?>">Editar</a></td>
+                <td><a href="<?php echo BASE_URL . 'post/eliminar/' . $this->posts[$i]['id'] ?>">Eliminar</a></td>
             </tr>
         <?php endfor; ?>
     </table>
