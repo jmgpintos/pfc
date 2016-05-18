@@ -19,9 +19,11 @@ try {
     require_once APP_PATH . 'Registro.php';
     require_once APP_PATH . 'Database.php';
     require_once APP_PATH . 'Session.php';
+    require_once APP_PATH . 'Hash.php';
 
     require_once LIB_PATH . 'helpers/helper-functions.php';
 
+//    echo Hash::getHash('SHA1', '1234', HASH_KEY);exit;
     Session::init();
 
     $r = new Request();

@@ -212,10 +212,10 @@ class Model {
      * Cambia la fecha delúltimo acceso del usuario con id $index
      * @param type $indexid del usuario
      */
-    public static function cambiarUltimoAcceso($index) {
+    public function cambiarUltimoAcceso($index) {
         $id = (int) $index;
 
-        $table = TABLES_PREFIX . 'usuarios';
+        $table = TABLES_PREFIX . 'usuario';
 
         $campos[':id'] = $id;
 
@@ -272,9 +272,9 @@ class Model {
      */
     public function getTableName($table) {
 
-        $len_prefix = strlen(TABLE_PREFIX);
+        $len_prefix = strlen(TABLES_PREFIX);
 
-        if (substr($table, 0, $len_prefix) == TABLE_PREFIX) {
+        if (substr($table, 0, $len_prefix) == TABLES_PREFIX) {
             return $table;
         } else {
             return TABLES_PREFIX . $table;

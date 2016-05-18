@@ -3,16 +3,19 @@
 class loginController extends Controller
 {
 
-    private $model;
+    private $_model;
 
     public function __construct()
     {
         parent::__construct();
-        $this->model = $this->loadModel('login');
+        $this->_model = $this->loadModel('login');
     }
 
     public function index()
     {
+        if(Session::get('autenticado')){
+            $this->redireccionar();
+        }
         $this->_view->titulo = 'Iniciar Sesión';
 
         if ($this->getInt('enviar') == 1) {
@@ -25,6 +28,7 @@ class loginController extends Controller
             Session::set('usuario', $row['username']);
             Session::set('id_usuario', $row['id']);
             Session::set('tiempo', time());
+            $this->_model->cambiarUltimoAcceso( $row['id']);
             $this->redireccionar();
         }
         
@@ -51,7 +55,7 @@ class loginController extends Controller
             $error = true;
         }
 
-        $row = $this->model->getUsuario(
+        $row = $this->_model->getUsuario(
                 $this->getAlphaNum('usuario'), $this->getSql('pass')
         );
 

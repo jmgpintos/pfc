@@ -95,9 +95,9 @@ abstract class Controller
     }
 
     /**
-     * Sanitizar password
-     * @param type $clave
-     * @return type
+     * Sanitizar cadenas SQL
+     * @param string $clave Nombre de la clave del array $_POST a sanitizar
+     * @return string Cadena sanitizada
      */
     protected function getSql($clave)
     {
@@ -112,10 +112,10 @@ abstract class Controller
     }
     
     /**
-     * Sanitizar nombre usuario
+     * Sanitizar cadenas alfanuméricas
      * Sólo acepta caracteres alfabéticos, numéricos y guión bajo
-     * @param type $clave
-     * @return type
+     * @param string $clave Nombre de la clave del array $_POST a sanitizar
+     * @return string Cadena sanitizada
      */
     protected function getAlphaNum($clave)
     {
@@ -123,6 +123,15 @@ abstract class Controller
             $_POST[$clave] = (string) preg_replace('/[^A-Z0-9_]/i', '', $_POST[$clave]);
             return trim($_POST[$clave]);
         }
+    }
+    
+    public function validarEmail($email)
+    {
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            return false;
+        }
+        
+        return true;
     }
 
 }

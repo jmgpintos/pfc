@@ -38,17 +38,18 @@
                             <?php
                             if ($item && $menu[$i]['id'] == $item) {
                                 $_item_style = 'current';
-                            } else {
+                            }
+                            else {
                                 $_item_style = '';
                             }
                             ?>
                             <li id="<?php echo $_item_style ?>">
                                 <a href="<?php echo $menu[$i]['enlace'] ?>">
-                                    <?php echo $menu[$i]['titulo'] ?>
+        <?php echo $menu[$i]['titulo'] ?>
                                 </a>
                             </li>
                         <?php endfor; ?>
-                    <?php endif; ?>
+<?php endif; ?>
                 </ul>
             </div>
             <div id="contenido">
@@ -57,4 +58,10 @@
                     Para el correcto funcionamiento de la aplicación debe activar el soporte de javascript
                 </p>
                 </noscript>
-                <div id="error"><?php if (isset($this->_error)) echo $this->_error ?></div>
+                
+                <?php if (isset($this->_error)): ?>
+                    <div id="error"> <?php echo $this->_error ?></div>
+                <?php endif; ?>
+                <?php if (isset($this->_mensaje)): ?>
+                    <div id="mensaje"> <?php echo $this->_mensaje ?></div>
+                <?php endif; ?>
