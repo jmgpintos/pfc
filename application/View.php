@@ -19,14 +19,13 @@ class View
     public function renderizar($vista, $item = false)
     {
 
-
         $_layoutParams = array(
             'ruta_css' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/css/',
             'ruta_img' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/img/',
             'ruta_js' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/js/',
             'menu' => self::getMenu(),
         );
-        
+
         if (count($this->_js)) {
             $js = $this->_js;
             $_layoutParams['js'] = $js;
@@ -38,7 +37,8 @@ class View
             include_once ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS . 'header.php';
             include_once $rutaView;
             include_once ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS . 'footer.php';
-        } else {
+        }
+        else {
             throw new Exception('error de vista ');
         }
     }
@@ -58,6 +58,20 @@ class View
             ),
         );
 
+        if (Session::get('autenticado')) {
+            $menu[] = array(
+                    'id' => 'login',
+                    'titulo' => 'Logout',
+                    'enlace' => BASE_URL . 'login/cerrar'
+            );
+        }
+        else {
+            $menu[] = array(
+                    'id' => 'login',
+                    'titulo' => 'Iniciar sesión',
+                    'enlace' => BASE_URL . 'login'
+            );
+        }
         return $menu;
     }
 
@@ -67,7 +81,8 @@ class View
             for ($i = 0; $i < count($js); $i++) {
                 $this->_js[] = BASE_URL . 'views/' . $this->_controlador . '/js/' . $js[$i] . '.js';
             }
-        } else {
+        }
+        else {
             throw new Exception('Error de js');
         }
     }

@@ -9,6 +9,7 @@ define('DEFAULT_LAYOUT', 'default');
 define('APP_NAME', 'Nombre app');
 define('APP_SLOGAN', 'Slogan app');
 define('APP_COMPANY', 'Company app');
+define('SESSION_TIME', 1);
 
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');

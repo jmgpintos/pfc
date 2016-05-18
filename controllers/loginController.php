@@ -3,33 +3,76 @@
 class loginController extends Controller
 {
 
+    private $model;
+
     public function __construct()
     {
         parent::__construct();
+        $this->model = $this->loadModel('login');
     }
 
     public function index()
     {
-        Session::set('autenticado', true);
-        Session::set('level', 'especial');
+        $this->_view->titulo = 'Iniciar Sesión';
 
-        Session::set('var1', 'var1');
-        Session::set('var2', 'var2');
-//        puty(__METHOD__);
+        if ($this->getInt('enviar') == 1) {
+            $this->_view->datos = $_POST;
+
+            $row = $this->validarUsuario();
+
+            Session::set('autenticado', true);
+            Session::set('level', $row['rol']);
+            Session::set('usuario', $row['username']);
+            Session::set('id_usuario', $row['id']);
+            Session::set('tiempo', time());
+            $this->redireccionar();
+        }
         
-        $this->redireccionar('login/mostrar');
-        
+        $this->_view->renderizar('index', 'login');
     }
-    
-    public function mostrar()
-    {        
-        vardump(info_sesion());
-    }
-    
+
     public function cerrar()
     {
         Session::destroy();
-        $this->redireccionar('login/mostrar');
+        $this->redireccionar();
+    }
+
+    private function validarUsuario()
+    {
+        $error = false;
+        $mensaje = null;
+
+        if (!$this->getAlphaNum('usuario')) {
+            $mensaje = 'Debe introducir un nombre de usuario';
+            $error = true;
+        }
+        else if (!$this->getSql('pass')) {
+            $mensaje = 'Debe introducir un password';
+            $error = true;
+        }
+
+        $row = $this->model->getUsuario(
+                $this->getAlphaNum('usuario'), $this->getSql('pass')
+        );
+
+        if (!$error) {
+            if (!$row) {
+                $mensaje = 'Usuario y/o password incorrecto';
+                $error = true;
+            }
+            else if ($row['estado'] != 1) {
+                $mensaje = 'Este usuario no está habilitado';
+                $error = true;
+            }
+        }
+
+        if ($error) {
+            $this->_view->_error = $mensaje;
+            $this->_view->renderizar('index', 'login');
+            exit;
+        }
+        
+        return $row;
     }
 
 }

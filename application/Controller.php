@@ -25,7 +25,8 @@ abstract class Controller
             require_once $rutaModelo;
             $modelo = new $modelo;
             return $modelo;
-        } else {
+        }
+        else {
             throw new Exception("Error de modelo");
         }
     }
@@ -35,7 +36,8 @@ abstract class Controller
         $rutaLibreria = ROOT . 'libs' . DS . $libreria . '.php';
         if (is_readable($rutaLibreria)) {
             require_once $rutaLibreria;
-        } else {
+        }
+        else {
             throw new Exception("Error al cargar libreria $libreria");
         }
     }
@@ -66,7 +68,8 @@ abstract class Controller
         if ($ruta) {
             header('location:' . BASE_URL . $ruta);
             exit;
-        } else {
+        }
+        else {
             header('location:' . BASE_URL);
             exit;
         }
@@ -75,18 +78,51 @@ abstract class Controller
     protected function filtrarInt($int)
     {
         $int = (int) $int;
-        
-        if(is_int($int)){
+
+        if (is_int($int)) {
             return $int;
-        }else{
+        }
+        else {
             return 0;
         }
     }
-    
+
     protected function getPostParam($clave)
     {
-        if(isset($_POST[$clave])){
+        if (isset($_POST[$clave])) {
             return $_POST[$clave];
         }
     }
+
+    /**
+     * Sanitizar password
+     * @param type $clave
+     * @return type
+     */
+    protected function getSql($clave)
+    {
+        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
+            $_POST[$clave] = strip_tags($_POST[$clave]);
+
+            if (!get_magic_quotes_gpc()) {
+                $_POST[$clave] = mysql_escape_string($_POST[$clave]);
+            }
+            return trim($_POST[$clave]);
+        }
+    }
+    
+    /**
+     * Sanitizar nombre usuario
+     * Sólo acepta caracteres alfabéticos, numéricos y guión bajo
+     * @param type $clave
+     * @return type
+     */
+    protected function getAlphaNum($clave)
+    {
+        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+            $_POST[$clave] = (string) preg_replace('/[^A-Z0-9_]/i', '', $_POST[$clave]);
+            return trim($_POST[$clave]);
+        }
+    }
+
 }
