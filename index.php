@@ -1,9 +1,10 @@
 <?php
 
 //echo "index.php";exit;
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
+if (DEBUG) {
+    error_reporting(E_ALL);
+    ini_set('display_errors', '1');
+}
 define('DS', DIRECTORY_SEPARATOR); //Carácter separador de directorios
 define('ROOT', realpath(dirname(__FILE__)) . DS); //Ruta raíz de la aplicación. La utilizamos para includes
 define('LIB_PATH', ROOT . 'libs' . DS);

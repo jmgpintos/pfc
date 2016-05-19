@@ -12,13 +12,10 @@ class registroModel extends Model
     {
 
         $id = $this->_db->query(
-                "SELECT id FROM usuario WHERE username = '$usuario'"
+                "SELECT id, codigo FROM usuario WHERE username = '$usuario'"
         );
-        if ($id->fetch()) {
-            return true;
-        }
-
-        return false;
+        
+        return $id->fetch();
     }
 
     public function verificarEmail($email)
@@ -44,7 +41,8 @@ class registroModel extends Model
           password              
           nombre                
           apellidos             
-          email                 
+          email
+          codigo
           telefono              
           ultimo_acceso         
           id_usuario_creacion   
@@ -53,10 +51,11 @@ class registroModel extends Model
           fecha_modificacion 
          */
         $role_usuario = 3;
-        $estado_nuevo = 3;
+        $estado_nuevo = 0;
+        $random = rand(11111111, 99999999);
         $this->_db->prepare(
-                "INSERT INTO usuario (id, id_rol, estado, username, password, nombre,email) VALUES "
-                . " (null, :role, :estado, :username, :password, :nombre, :email  )"
+                "INSERT INTO usuario (id, id_rol, estado, username, password, nombre,email,codigo,fecha_creacion) VALUES "
+                . " (null, :role, :estado, :username, :password, :nombre, :email, :codigo, now()  )"
                 )
                 ->execute(array(
                     ':nombre'   => $nombre,
@@ -65,7 +64,27 @@ class registroModel extends Model
                     ':username' => $username,
                     ':password' => Hash::getHash('sha1', $password, HASH_KEY),
                     ':email'    => $email,
+                    ':codigo'   => $random,
                 ));
+    }
+    
+    public function getUsuario($id, $codigo)
+    {
+        //TODO validar parametros
+        $usuario = $this->_db->query(
+                "SELECT * FROM usuario WHERE id = $id AND codigo = '$codigo'"
+                );
+        
+        return $usuario->fetch();
+    }
+    
+    public function activarUsuario($id, $codigo)
+    {
+        //TODO pasar estado a CONSTANTE
+        $this->_db->query(
+                "UPDATE usuario SET estado = 1 "
+                . "WHERE id = $id AND codigo = '$codigo'"
+                );
     }
 
 }
