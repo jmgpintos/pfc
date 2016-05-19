@@ -256,7 +256,7 @@ class Model {
     }
 
     public function getColumnas($data) {
-        put(__METHOD__);
+//        put(__METHOD__);
         if (count($data)) {
             return array_keys($data[0]);
         } else {

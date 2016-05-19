@@ -1,5 +1,6 @@
 <?php
 
+define('DEBUG', true);
 //echo "index.php";exit;
 if (DEBUG) {
     error_reporting(E_ALL);
@@ -29,10 +30,10 @@ try {
 
     $r = new Request();
 
-    put($r->getControlador());
-    put($r->getMetodo());
-    vardump($r->getArgs());
-    vardump(info_sesion());
+//    put($r->getControlador());
+//    put($r->getMetodo());
+//    vardump($r->getArgs());
+//    vardump(info_sesion());
 //    puty(__FILE__);
 
     Bootstrap::run(new Request());

@@ -81,18 +81,25 @@ class registroController extends Controller
             }
 
             $mail->From = MAIL_FROM;
-            $mail->FromName = 'Banco de imágenes';
-            $mail->Subject = 'Activación de cuenta de usuario';
+            $mail->FromName = html_entity_decode('Banco de imágenes');
+            $mail->Subject = html_entity_decode('Activación de cuenta de usuario');
             $mail->Body = 'Hola <strong>' . $this->getSql('nombre') . '</strong>,'
-                    . ' <p>Se ha registrado en este bendito sitio.'
+                    . ' <p>Se ha registrado en ' . APP_NAME . '.'
                     . ' Para activar su cuenta haga click sobre el siguiente enlace:</p>'
                     . ' <a href="' . BASE_URL . 'registro/activar/'
-                    . $usuario['id'] . '/' . $usuario['codigo'] . '>'
-                    . BASE_URL . 'registro/activar/'
-                    . $usuario['id'] . '/' . $usuario['codigo'] . '</a>';
+                    . $usuario['id'] . '/' . $usuario['codigo'] . '">'
+                    . 'Activar registro' . '</a>';
+//                    . BASE_URL . 'registro/activar/'
+//                    . $usuario['id'] . '/' . $usuario['codigo'] . '</a>';
             $mail->AltBody = 'Su servidor de correo no soporta HTML';
             $mail->addAddress($this->getPostParam('email'));
-            $mail->Send();
+            $mail->CharSet = 'UTF-8';
+
+            if (!$mail->send()) {
+                $this->_view->_error = "Mailer Error: " . $mail->ErrorInfo;
+                $this->_view->renderizar('index', 'registro');
+                exit;
+            }
 
             $this->_view->_mensaje = 'Registro completado, revise su email para activar su cuenta';
         }
@@ -126,14 +133,17 @@ class registroController extends Controller
         $this->_registro->activarUsuario(
                 $this->filtrarInt($id), $this->filtrarInt($codigo)
         );
-        
-        
+
+
+        $row = $this->_registro->getUsuario(
+                $this->filtrarInt($id), $this->filtrarInt($codigo)
+        );
         if ($row['estado'] == 0) {//TODO estado como CONSTANTE
             $this->_view->_error = 'Error al activar la cuenta, por favor inténtelo más tarde';
             $this->_view->renderizar('activar', 'registro');
             exit;
         }
-        
+
         $this->_view->_mensaje = 'Su cuenta ha sido activada';
         $this->_view->renderizar('activar', 'registro');
     }

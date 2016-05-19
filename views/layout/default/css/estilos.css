@@ -2,8 +2,8 @@ body{
     margin: 0;
     background: silver;
     font-family: Arial;
-    padding-left: 40px;
-    padding-right: 40px;
+/*    padding-left: 40px;
+    padding-right: 40px;*/
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -66,4 +66,29 @@ body{
     background: darkred;
     color: white;
     padding: 10px;
+}
+
+#info{
+    text-align: center;
+    background-color: lightskyblue;
+    padding: 15px;
+    
+    
+    border-top: 5px solid black;
+    overflow-y: scroll;
+    word-break: keep-all;
+    z-index: 999;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    /*height: 55px;*/
+    /* padding: 5px 0; */
+}
+#lema{
+    border-top: 1px solid lightgoldenrodyellow;
+    color: lightgoldenrodyellow;
+    padding-top: 15px;
+    margin-top: 15px;
+    font-style: italic;
+    text-align: center;
 }

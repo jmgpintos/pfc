@@ -1,7 +1,5 @@
 <?php
 
-define('DEBUG', true);
-
 if (DEBUG) {
     define('BASE_URL', 'http://bancodeimagenes.lan/'); //Para acceder a archivos desde las vistas
     define('DB_HOST', 'localhost');
@@ -12,7 +10,7 @@ if (DEBUG) {
 
     define('TABLES_PREFIX', '');
     
-    define('MAIL_FROM','bancodeimagenes.lan');
+    define('MAIL_FROM','admin@bancodeimagenes.lan');
 }
 else {
     define('BASE_URL', 'http://bimagenes.hol.es/'); //Para acceder a archivos desde las vistas 
@@ -24,15 +22,15 @@ else {
 
     define('TABLES_PREFIX', '');
     
-    define('MAIL_FROM','bimagenes.hol.es');
+    define('MAIL_FROM','admin@bimagenes.hol.es');
 }
 
 define('DEFAULT_CONTROLLER', 'index');
 define('DEFAULT_LAYOUT', 'default');
 
-define('APP_NAME', 'Nombre app');
-define('APP_SLOGAN', 'Slogan app');
-define('APP_COMPANY', 'Company app');
+define('APP_NAME', 'Banco de imágenes');
+define('APP_SLOGAN', 'Life\'s better when we\'re connected');
+define('APP_COMPANY', 'José Manuel García Pintos');
 
 define('SESSION_TIME', 1);
 define('HASH_KEY', '573ca1f7efa62');
