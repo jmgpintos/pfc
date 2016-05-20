@@ -19,7 +19,7 @@ class postModel extends Model
     {
         $id = (int) $id;
         $post = $this->_db->query("SELECT * FROM posts WHERE id = " . $id);
-        return $post->fetch(PDO::FETCH_ASSOC);//TODO devolver ASSOC, NUM o BOTH
+        return $post->fetch(PDO::FETCH_ASSOC); //TODO devolver ASSOC, NUM o BOTH
     }
 
     public function insertarPost($titulo, $cuerpo)
@@ -32,7 +32,7 @@ class postModel extends Model
                         )
         );
     }
-    
+
     public function editarPost($id, $titulo, $cuerpo)
     {
         $id = (int) $id;
@@ -40,20 +40,34 @@ class postModel extends Model
         $this->_db->prepare("UPDATE posts SET titulo = :titulo, cuerpo = :cuerpo WHERE id = :id")
                 ->execute(
                         array(
-                            ':id'       => $id,
-                            ':titulo'   => $titulo,
-                            ':cuerpo'   => $cuerpo
+                            ':id' => $id,
+                            ':titulo' => $titulo,
+                            ':cuerpo' => $cuerpo
                         )
         );
-        
     }
-    
+
     public function eliminarPost($id)
     {
         $id = (int) $id;
-        
+
         $post = $this->_db->query("DELETE FROM posts WHERE id = " . $id);
-        
+    }
+
+    public function crear100()
+    {
+        for ($i = 0; $i < 100; $i++) {
+            $r = rand(00000, 99999);
+            $titulo = 'post_' . $r;
+            $cuerpo = 'cuerpo del post # ' . $r;
+            $this->insertarPost($titulo, $cuerpo);
+        }
+    }
+    
+    public function borrarPruebas()
+    {
+
+        $post = $this->_db->query("DELETE FROM posts WHERE id > 9 ");
     }
 
 }

@@ -66,6 +66,7 @@ body{
     background: darkred;
     color: white;
     padding: 10px;
+    margin-bottom: 100px;
 }
 
 #info{
@@ -91,4 +92,11 @@ body{
     margin-top: 15px;
     font-style: italic;
     text-align: center;
+}
+
+
+table, td,th{
+    border-collapse: collapse;
+    border:1px solid black;
+    padding: 5px;
 }

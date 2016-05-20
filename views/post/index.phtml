@@ -28,7 +28,11 @@ No hay posts
 <?php endif; ?>
 
 
+<?php if(isset($this->paginacion)) echo $this->paginacion;?>
+
 <?php if(Session::accesoView('especial')):?>
-<p><a href="<?php BASE_URL;?>post/nuevo">Agregar post</a></p>
+<p><a href="<?php echo BASE_URL;?>post/nuevo">Agregar post</a> | 
+    <a href="<?php echo BASE_URL;?>post/crear100">Crear 100 posts</a> | 
+    <a href="<?php echo BASE_URL;?>post/borrarPruebas">Borrar pruebas</a></p>
 <?php endif; ?>
 

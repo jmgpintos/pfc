@@ -11,10 +11,21 @@ class postController extends Controller
         $this->_post = $this->loadModel('post');
     }
 
-    public function index()
+    public function index($pagina = false)
     {
+//        puty($pagina);
+        if (!$this->filtrarInt($pagina)) {
+            $pagina = false;
+        }
+        else {
+            $pagina = (int)$pagina;
+        }
 
-        $this->_view->posts = $this->_post->getPosts();
+        $this->getLibrary('paginador');
+        $paginador = new Paginador();
+
+        $this->_view->posts = $paginador->paginar($this->_post->getPosts(), $pagina);
+        $this->_view->paginacion = $paginador->getView('paginacion', 'post/index');
         $this->_view->columnas = $this->_post->getColumnas($this->_view->posts);
         $this->_view->titulo = "Post";
         $this->_view->renderizar('index', 'post');
@@ -83,7 +94,8 @@ class postController extends Controller
 
             //guardar datos
             $this->_post->editarPost(
-                    $this->filtrarInt($id), $this->getPostParam('titulo'), $this->getPostParam('cuerpo')
+                    $this->filtrarInt($id), $this->getPostParam('titulo'),
+                    $this->getPostParam('cuerpo')
             );
             $this->redireccionar('post');
         }
@@ -104,6 +116,20 @@ class postController extends Controller
         }
 
         $this->_post->eliminarPost($this->filtrarInt($id));
+
+        $this->redireccionar('post');
+    }
+
+    public function crear100()
+    {
+        $this->_post->crear100();
+
+        $this->redireccionar('post');
+    }
+
+    public function borrarPruebas()
+    {
+        $this->_post->borrarPruebas();
 
         $this->redireccionar('post');
     }
