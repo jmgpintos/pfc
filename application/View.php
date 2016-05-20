@@ -4,7 +4,9 @@
  * A diferencia de los controladores, las vistas son instanciadas desde esta clase principal
  */
 
-class View
+require_once ROOT . 'libs' . DS . 'smarty' . DS . 'libs' . DS . 'Smarty.class.php';
+
+class View extends Smarty
 {
 
     private $_controlador;
@@ -12,18 +14,32 @@ class View
 
     public function __construct(Request $peticion)
     {
+        parent::__construct();
         $this->_controlador = $peticion->getControlador();
         $this->_js = array();
     }
 
     public function renderizar($vista, $item = false)
     {
+        //Directorios para smarty
+        $this->setTemplateDir(ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS);
+        $this->setConfigDir(ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS . 'configs' . DS);
+        $this->setCacheDir(ROOT . 'tmp' . DS . 'cache' . DS);
+        $this->setCompileDir(ROOT . 'tmp' . DS . 'template' . DS);
 
-        $_layoutParams = array(
+
+        $_params = array(
             'ruta_css' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/css/',
             'ruta_img' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/img/',
             'ruta_js' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/js/',
             'menu' => self::getMenu(),
+            'item' => $item,
+            'root' => BASE_URL,
+            'configs' => array(
+                'app_name' => APP_NAME,
+                'app_slogan' => APP_SLOGAN,
+                'app_company' => APP_COMPANY,
+            ),
         );
 
         if (count($this->_js)) {
@@ -31,16 +47,17 @@ class View
             $_layoutParams['js'] = $js;
         }
 
-        $rutaView = ROOT . 'views' . DS . $this->_controlador . DS . $vista . '.phtml';
+        $rutaView = ROOT . 'views' . DS . $this->_controlador . DS . $vista . '.tpl';
 
         if (is_readable($rutaView)) {
-            include_once ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS . 'header.php';
-            include_once $rutaView;
-            include_once ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS . 'footer.php';
+            $this->assign('_contenido', $rutaView);
         }
         else {
             throw new Exception('error de vista ');
         }
+        
+        $this->assign('_layoutParams', $_params);
+        $this->display('template.tpl');
     }
 
     protected function getMenu()
@@ -60,25 +77,25 @@ class View
 
         if (Session::get('autenticado')) {
             $menu[] = array(
-                    'id' => 'login',
-                    'titulo' => 'Logout',
-                    'enlace' => BASE_URL . 'login/cerrar'
+                'id' => 'login',
+                'titulo' => 'Logout',
+                'enlace' => BASE_URL . 'login/cerrar'
             );
         }
         else {
             $menu[] = array(
-                    'id' => 'login',
-                    'titulo' => 'Iniciar sesión',
-                    'enlace' => BASE_URL . 'login'
+                'id' => 'login',
+                'titulo' => 'Iniciar sesión',
+                'enlace' => BASE_URL . 'login'
             );
             $menu[] = array(
-                    'id' => 'registro',
-                    'titulo' => 'Registro',
-                    'enlace' => BASE_URL . 'registro'
+                'id' => 'registro',
+                'titulo' => 'Registro',
+                'enlace' => BASE_URL . 'registro'
             );
         }
-        
-        
+
+
         return $menu;
     }
 

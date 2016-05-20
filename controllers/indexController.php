@@ -12,12 +12,12 @@ class indexController extends Controller
 
     public function index()
     {
-        $post = $this->loadModel('post');
-        $posts = $post->getPosts();
-
-        $this->_view->columnas = $post->getColumnas($posts);
-        $this->_view->posts = $posts;
-        $this->_view->titulo = "Portada";
+//        $post = $this->loadModel('post');
+//        $posts = $post->getPosts();
+//
+//        $this->_view->columnas = $post->getColumnas($posts);
+//        $this->_view->posts = $posts;
+        $this->_view->assign('titulo', "Portada");
         $this->_view->renderizar('index', 'inicio');
     }
 

@@ -23,11 +23,12 @@ class postController extends Controller
 
         $this->getLibrary('paginador');
         $paginador = new Paginador();
-
-        $this->_view->posts = $paginador->paginar($this->_post->getPosts(), $pagina);
-        $this->_view->paginacion = $paginador->getView('paginacion', 'post/index');
-        $this->_view->columnas = $this->_post->getColumnas($this->_view->posts);
-        $this->_view->titulo = "Post";
+        $posts = $paginador->paginar($this->_post->getPosts(), $pagina);
+        
+        $this->_view->assign('posts', $posts);
+        $this->_view->assign('paginacion', $paginador->getView('paginacion', 'post/index'));
+        $this->_view->assign('columnas', $this->_post->getColumnas($posts));
+        $this->_view->assign('titulo', 'Post');
         $this->_view->renderizar('index', 'post');
     }
 
