@@ -46,6 +46,15 @@ class Session
         }
     }
 
+    public static function estaAutenticado()
+    {
+        if (self::get('autenticado')) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 
      * @param type $level Nivel de usuario mínimo requerido para tener permiso
@@ -56,7 +65,7 @@ class Session
             header('location:' . BASE_URL . 'error/access/5050');
             exit;
         }
-        
+
         Session::tiempo();
 
         //Comparamos el nivel de acceso requerido con el nivel del usuario
@@ -87,9 +96,9 @@ class Session
 
     public static function getLevel($level)
     {
-        $role['admin'] = 3;
-        $role['especial'] = 2;
-        $role['usuario'] = 1;
+        $role['admin'] = USUARIO_ROL_ADMIN;
+        $role['especial'] = USUARIO_ROL_ESPECIAL;
+        $role['usuario'] = USUARIO_ROL_USUARIO;
 
         if (!array_key_exists($level, $role)) {
             throw new Exception('Error de acceso');
@@ -110,7 +119,7 @@ class Session
             header('location:' . BASE_URL . 'error/access/5050');
             exit;
         }
-        
+
         Session::tiempo();
 
         if ($noAdmin == false) {

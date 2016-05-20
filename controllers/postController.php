@@ -18,37 +18,38 @@ class postController extends Controller
             $pagina = false;
         }
         else {
-            $pagina = (int)$pagina;
+            $pagina = (int) $pagina;
         }
 
         $this->getLibrary('paginador');
         $paginador = new Paginador();
         $posts = $paginador->paginar($this->_post->getPosts(), $pagina);
-        
+
         $this->_view->assign('posts', $posts);
         $this->_view->assign('paginacion', $paginador->getView('paginacion', 'post/index'));
         $this->_view->assign('columnas', $this->_post->getColumnas($posts));
         $this->_view->assign('titulo', 'Post');
+        $this->_view->assign('tituloView', 'Últimos Posts');
         $this->_view->renderizar('index', 'post');
     }
 
     public function nuevo()
     {
         Session::acceso('especial');
-        $this->_view->titulo = "Nuevo post";
+        $this->_view->assign('titulo', "Nuevo post");
         $this->_view->setJs(array('nuevo'));
 
         //
         if ($this->getInt('guardar') == 1) {
-            $this->_view->datos = $_POST; //TODO limpiar $_POST
+            $this->_view->assign('datos', $_POST); //TODO limpiar $_POST
             //validar
             if (!$this->getTexto('titulo')) {
-                $this->_view->_error = 'Debe introducir el título del post';
+                $this->_view->assign('_error', 'Debe introducir el título del post');
                 $this->_view->renderizar('nuevo', 'post');
                 exit;
             }
             if (!$this->getTexto('cuerpo')) {
-                $this->_view->_error = 'Debe introducir el cuerpo del post';
+                $this->_view->assign('_error', 'Debe introducir el cuerpo del post');
                 $this->_view->renderizar('nuevo', 'post');
                 exit;
             }
@@ -75,7 +76,7 @@ class postController extends Controller
             $this->redireccionar('post');
         }
 
-        $this->_view->titulo = "Editar post";
+        $this->_view->assign('titulo', "Editar post");
         $this->_view->setJs(array('nuevo'));
 
 
@@ -83,12 +84,12 @@ class postController extends Controller
             $this->_view->datos = $_POST; //TODO limpiar $_POST
             //validar
             if (!$this->getTexto('titulo')) {
-                $this->_view->_error = 'Debe introducir el título del post';
+                $this->_view->assign('_error', 'Debe introducir el título del post');
                 $this->_view->renderizar('editar', 'post');
                 exit;
             }
             if (!$this->getTexto('cuerpo')) {
-                $this->_view->_error = 'Debe introducir el cuerpo del post';
+                $this->_view->assign('_error', 'Debe introducir el cuerpo del post');
                 $this->_view->renderizar('editar', 'post');
                 exit;
             }
@@ -102,7 +103,7 @@ class postController extends Controller
         }
 
 
-        $this->_view->datos = $this->_post->getPost($this->filtrarInt($id));
+        $this->_view->assign('datos', $this->_post->getPost($this->filtrarInt($id)));
         $this->_view->renderizar('editar', 'post');
     }
 

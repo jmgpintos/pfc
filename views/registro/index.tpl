@@ -6,17 +6,17 @@
 
     <p>
         <label>Nombre: </label>
-        <input type="text" name="nombre" value="<?php if(isset($this->datos)) echo $this->datos['nombre']?>">
+        <input type="text" name="nombre" value="{if isset($datos.nombre)}{$datos.nombre}{/if}">
     </p>
 
     <p>
         <label>Usuario: </label>
-        <input type="text" name="usuario" value="<?php if(isset($this->datos)) echo $this->datos['usuario']?>">
+        <input type="text" name="usuario" value="{if isset($datos.usuario)}{$datos.usuario}{/if}">
     </p>
 
     <p>
         <label>Email: </label>
-        <input type="text" name="email" value="<?php if(isset($this->datos)) echo $this->datos['email']?>">
+        <input type="text" name="email" value="{if isset($datos.email)}{$datos.email}{/if}">
     </p>
 
     <p>

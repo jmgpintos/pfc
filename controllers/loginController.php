@@ -13,13 +13,13 @@ class loginController extends Controller
 
     public function index()
     {
-        if(Session::get('autenticado')){
+        if (Session::estaAutenticado()) {
             $this->redireccionar();
         }
-        $this->_view->titulo = 'Iniciar Sesión';
+        $this->_view->assign('titulo', 'Iniciar Sesión');
 
         if ($this->getInt('enviar') == 1) {
-            $this->_view->datos = $_POST;
+            $this->_view->assign('datos', $_POST);
 
             $row = $this->validarUsuario();
 
@@ -28,10 +28,10 @@ class loginController extends Controller
             Session::set('usuario', $row['username']);
             Session::set('id_usuario', $row['id']);
             Session::set('tiempo', time());
-            $this->_model->cambiarUltimoAcceso( $row['id']);
+            $this->_model->cambiarUltimoAcceso($row['id']);
             $this->redireccionar();
         }
-        
+
         $this->_view->renderizar('index', 'login');
     }
 
@@ -75,7 +75,7 @@ class loginController extends Controller
             $this->_view->renderizar('index', 'login');
             exit;
         }
-        
+
         return $row;
     }
 

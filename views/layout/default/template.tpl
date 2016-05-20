@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <title>{$titulo|default:"Sin titulo"}</title>
+        <title>{$titulo|default:""}{if isset($titulo)} | {/if}{$_layoutParams.configs.app_name}</title>
 
         <link rel="stylesheet" href="{$_layoutParams.ruta_css}estilos.css">
         <script src="{$_layoutParams.root}public/js/jquery.js" type="text/javascript"></script>
@@ -53,7 +53,15 @@
                 {if isset($_mensaje)}
                     <div id="mensaje"> {$_mensaje}</div>
                 {/if}
-
+                <h2>
+                    {if isset($tituloView)}
+                        {$tituloView}
+                    {else}
+                        {if isset($titulo)}
+                            {$titulo }
+                        {/if}
+                    {/if}
+                </h2>
                 {include file=$_contenido}
 
             </div> <!--contenido-->
@@ -63,7 +71,7 @@
             </div>
         </div><!--main-->
         <div id="info">
-            <strong>ROOT</strong>: {$_layoutParams.root} | <strong>BASE_URL</strong>: {BASE_URL}<br/>
+            <strong>ROOT</strong>: {ROOT} | <strong>BASE_URL</strong>: {BASE_URL}<br/>
             {info_sesion()}
         </div>
 

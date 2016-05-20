@@ -1,11 +1,10 @@
-<h2>Iniciar sesi&oacute;n</h2>
 
 <form name="form1" method="post" action="">
     <input type="hidden" name="enviar" value="1" />
 
     <p>
         <label>Usuario: </label>
-        <input type="text" name="usuario" value="<?php if(isset($this->datos)) echo $this->datos['usuario']?>">
+        <input type="text" name="usuario" value="{if isset($datos.usuario)}{$datos.usuario}{/if}">
     </p>
 
     <p>

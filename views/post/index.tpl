@@ -1,4 +1,4 @@
-<h2>Últimos Posts</h2>
+
 {if (isset($posts) && count($posts))}
     <table>
        <thead>
@@ -27,7 +27,7 @@
 {/if}
 
 
-{if isset($paginacion)} {$paginacion}{/if}
+{if isset($paginacion)}{$paginacion}{/if}
 
 {if (Session::accesoView('especial'))}
     <p>

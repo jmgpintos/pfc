@@ -34,3 +34,12 @@ define('APP_COMPANY', 'José Manuel García Pintos');
 
 define('SESSION_TIME', 1);
 define('HASH_KEY', '573ca1f7efa62');
+
+//estados usuario
+define('USUARIO_ESTADO_ACTIVADO', 1);
+define('USUARIO_ESTADO_NO_ACTIVADO', 0);
+
+//roles usuario. Ojo, no es lo mismo que la tabla usuarios.
+define('USUARIO_ROL_ADMIN', 3);
+define('USUARIO_ROL_ESPECIAL', 2);
+define('USUARIO_ROL_USUARIO', 1);
