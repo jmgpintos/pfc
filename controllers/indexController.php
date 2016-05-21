@@ -2,6 +2,7 @@
 
 class indexController extends Controller
 {
+
 //    private $_model;
 
     public function __construct()

@@ -81,7 +81,8 @@ class postController extends Controller
 
 
         if ($this->getInt('guardar') == 1) {
-            $this->_view->datos = $_POST; //TODO limpiar $_POST
+            $this->_view->assign('datos', $_POST);
+            ; //TODO limpiar $_POST
             //validar
             if (!$this->getTexto('titulo')) {
                 $this->_view->assign('_error', 'Debe introducir el título del post');
@@ -99,6 +100,9 @@ class postController extends Controller
                     $this->filtrarInt($id), $this->getPostParam('titulo'),
                     $this->getPostParam('cuerpo')
             );
+            
+            Session::setMensaje('El Post ha sido editado correctamente');
+
             $this->redireccionar('post');
         }
 

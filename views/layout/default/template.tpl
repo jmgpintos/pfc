@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
     <head>
         <meta charset="UTF-8">
         <title>{$titulo|default:""}{if isset($titulo)} | {/if}{$_layoutParams.configs.app_name}</title>
@@ -15,66 +14,22 @@
             {/foreach}
         {/if}
     </head>
-    <body>
+    <body class="container khaki">
         <div id="main">
-            <div id="header">
-                <h1>
-                    {$_layoutParams.configs.app_name}
-                </h1>
-            </div>
-            <div id="top_menu">
-                <ul>
-                    {if isset($_layoutParams.menu)}
-                        {foreach item=it from=$_layoutParams.menu}
-                            {if ({$_layoutParams.item} && {$it.id} == {$_layoutParams.item}) }
-                                {assign var=_item_style value= 'current'}
-                            {else}
-                                {assign var=_item_style value= ''}
-                            {/if}
-                            <li>
-                                <a class="{$_item_style}" href="{$it.enlace}">
-                                    {$it.titulo}
-                                </a>
-                            </li>
-                        {/foreach}
-                    {/if}
-                </ul>
-            </div>
-            <div id="contenido">
+            {include file=$_layoutParams.includes.header}
+            <div id="contenido" class="container khaki">
                 <noscript>
-                <p>
-                    Para el correcto funcionamiento de la aplicación debe activar el soporte de javascript
-                </p>
+                <div>Para el correcto funcionamiento de la aplicación debe activar el soporte de javascript</div>
                 </noscript>
-
-                {if isset($_error)}
-                    <div id="error"> {$_error}</div>
-                {/if}
-                {if isset($_mensaje)}
-                    <div id="mensaje"> {$_mensaje}</div>
-                {/if}
-                <h2>
-                    {if isset($tituloView)}
-                        {$tituloView}
-                    {else}
-                        {if isset($titulo)}
-                            {$titulo }
-                        {/if}
-                    {/if}
-                </h2>
+                {include file=$_layoutParams.includes.mensajes}
+                {include file=$_layoutParams.includes.titulo}
                 {include file=$_contenido}
 
             </div> <!--contenido-->
-            <div id="footer">
-                <div>{$_layoutParams.configs.app_company}</div>
-                <div id="lema">{$_layoutParams.configs.app_slogan}</div>
-            </div>
-        </div><!--main-->
-        <div id="info">
-            <strong>ROOT</strong>: {ROOT} | <strong>BASE_URL</strong>: {BASE_URL}<br/>
-            {info_sesion()}
-        </div>
-
+            {include file=$_layoutParams.includes.footer}
+            {if DEBUG}
+                {include file=$_layoutParams.includes.info_debug}
+            {/if}
 
     </body>
 </html>

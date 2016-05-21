@@ -27,7 +27,7 @@ class View extends Smarty
         $this->setCacheDir(ROOT . 'tmp' . DS . 'cache' . DS);
         $this->setCompileDir(ROOT . 'tmp' . DS . 'template' . DS);
 
-
+        $rutaDefaultLayout = ROOT . 'views' . DS . 'layout' . DS . DEFAULT_LAYOUT . DS;
         $_params = array(
             'ruta_css' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/css/',
             'ruta_img' => BASE_URL . 'views/layout/' . DEFAULT_LAYOUT . '/img/',
@@ -35,6 +35,14 @@ class View extends Smarty
             'menu' => self::getMenu(),
             'item' => $item,
             'root' => BASE_URL,
+            'includes' => array(
+                'header' => $rutaDefaultLayout . 'header.tpl',
+                'menu' => $rutaDefaultLayout . 'menu.tpl',
+                'titulo' => $rutaDefaultLayout . 'titulo.tpl',
+                'mensajes' => $rutaDefaultLayout . 'mensajes.tpl',
+                'footer' => $rutaDefaultLayout . 'footer.tpl',
+                'info_debug' => $rutaDefaultLayout . 'info_debug.tpl',
+            ),
             'configs' => array(
                 'app_name' => APP_NAME,
                 'app_slogan' => APP_SLOGAN,
@@ -55,7 +63,7 @@ class View extends Smarty
         else {
             throw new Exception('error de vista ');
         }
-        
+
         $this->assign('_layoutParams', $_params);
         $this->display('template.tpl');
     }

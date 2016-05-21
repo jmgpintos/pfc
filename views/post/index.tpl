@@ -1,6 +1,6 @@
 
 {if (isset($posts) && count($posts))}
-    <table>
+    <table class="table striped">
        <thead>
             <tr>
                 {foreach item=it from=$columnas}

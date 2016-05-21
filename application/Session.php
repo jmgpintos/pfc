@@ -3,11 +3,18 @@
 class Session
 {
 
+    /**
+     * Inicia sesión PHP
+     */
     public static function init()
     {
         session_start();
     }
 
+    /**
+     * Finaliza sesión PHP o borra una variable de sesión determinada
+     * @param string $clave Nombre de variable de sesión a borrar. Si es false, se finaliza la sesión
+     */
     public static function destroy($clave = false)
     {
         if ($clave) {
@@ -29,6 +36,11 @@ class Session
         }
     }
 
+    /**
+     * Establece el valor de una variable de sesión
+     * @param type $clave Nombre de la variable
+     * @param type $valor Valor de la variable
+     */
     public static function set($clave, $valor)
     {
         if (!empty($clave)) {
@@ -36,6 +48,11 @@ class Session
         }
     }
 
+    /**
+     * Recupera el valor de una variable de sessión
+     * @param type $clave Nombre de la variable
+     * @return type Valor de la variable
+     */
     public static function get($clave = false)
     {
         if (isset($_SESSION[$clave])) {
@@ -46,10 +63,58 @@ class Session
         }
     }
 
+    /**
+     * Devuelve true si el usuario está autenticado
+     * @return boolean
+     */
     public static function estaAutenticado()
     {
         if (self::get('autenticado')) {
             return true;
+        }
+
+        return false;
+    }
+
+    //mensaje y error son variables de sesión para pasar mensajes 
+    //entre vistas al usar la función redireccionar
+    /**
+     * Establece el valor y el tipo del mensaje
+     * @param string $msg Texto el mensaje
+     * @param string $tipo tipo de mensaje: 'mensaje'|'error'
+     */
+    
+    public static function setMensaje($msg, $tipo = 'mensaje')
+    {
+        if ($tipo == 'mensaje') {
+            self::set('mensaje', $msg);
+        }
+        else {
+            self::set('error', $msg);
+        }
+    }
+
+    /**
+     * Recupera el texto de error
+     * @return boolean|string Texto del error o false si no existe la variable de sesión 'error'
+     */
+    public static function getError()
+    {
+        if (isset($_SESSION['error'])) {
+            return self::get('error');
+        }
+
+        return false;
+    }
+
+    /**
+     * Recupera el texto de mensaje
+     * @return boolean|string Texto del mensaje o false si no existe la variable de sesión 'mensaje'
+     */
+    public static function getMensaje()
+    {
+        if (isset($_SESSION['mensaje'])) {
+            return self::get('mensaje');
         }
 
         return false;
@@ -94,6 +159,12 @@ class Session
         return true;
     }
 
+    /**
+     * Recupera el número entero que corresponde al nivel enviado
+     * @param string $level Nivel de usuario
+     * @return int Entero que representa el nivel de usuario
+     * @throws Exception
+     */
     public static function getLevel($level)
     {
         $role['admin'] = USUARIO_ROL_ADMIN;
@@ -160,6 +231,13 @@ class Session
         return false;
     }
 
+    /**
+     * Comprueba si ha caducado el tiempo de sesión.
+     * En caso e que haya caducado, envía a una página de error.
+     * Si no ha caducado, actualiza el tiempo para mantener la sesión activa.
+     * @return void
+     * @throws Exception
+     */
     public static function tiempo()
     {
         if (!Session::get('tiempo') || !defined('SESSION_TIME')) {
