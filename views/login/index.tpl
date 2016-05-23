@@ -4,7 +4,7 @@
 
     <p>
         <label>Usuario: </label>
-        <input type="text" name="usuario" value="{if isset($datos.usuario)}{$datos.usuario}{/if}">
+        <input type="text" name="usuario" value="{if isset($datos.usuario)}{$datos.usuario}{/if}" autofocus>
     </p>
 
     <p>

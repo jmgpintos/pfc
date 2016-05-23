@@ -64,10 +64,5 @@ class postModel extends Model
         }
     }
     
-    public function borrarPruebas()
-    {
-
-        $post = $this->_db->query("DELETE FROM posts WHERE id > 9 ");
-    }
 
 }

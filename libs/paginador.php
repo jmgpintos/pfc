@@ -18,7 +18,7 @@ class Paginador
             $limite = $limite;
         }
         else {
-            $limite = 10;
+            $limite = REGISTROS_POR_PAGINA;
         }
 
         if ($pagina && is_numeric($pagina)) {

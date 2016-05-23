@@ -22,6 +22,7 @@ try {
     require_once APP_PATH . 'Database.php';
     require_once APP_PATH . 'Session.php';
     require_once APP_PATH . 'Hash.php';
+    require_once APP_PATH . 'Log.php';
 
     require_once LIB_PATH . 'helpers/helper-functions.php';
 

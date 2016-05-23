@@ -27,9 +27,21 @@ class Model {
     public function getLast_id() {
         return $this->_lastID;
     }
+    
+    public function getCount($table)
+    {
+        $table = $this->getTableName($table);
+
+        $SQL = "SELECT count(*) FROM $table ";
+
+        $row = $this->_db->query($SQL);
+
+        return $row->fetch()[0];
+        
+    }
 
     public function getSQL($sql) {
-        $row = $this->_db_->query($sql);
+        $row = $this->_db->query($sql);
 
         $rs = $row->fetchAll(PDO::FETCH_ASSOC);
 
@@ -48,7 +60,7 @@ class Model {
 
         $SQL = "SELECT * FROM $table ";
 
-        $row = $this->_db_->query($SQL);
+        $row = $this->_db->query($SQL);
 
         return $row->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -68,7 +80,7 @@ class Model {
         $sql = "SELECT * FROM $table WHERE id=$id";
 
 //        put($sql);
-        $row = $this->_db_->query($sql);
+        $row = $this->_db->query($sql);
 
         return $row->fetch(PDO::FETCH_ASSOC);
     }
@@ -102,10 +114,10 @@ class Model {
         //        vardump($campos);
         //        put($sql);exit;
         //ejecutar consulta
-        $this->_db_->prepare($sql)
+        $this->_db->prepare($sql)
                 ->execute($campos);
 
-        $this->_lastID = $this->_db_->lastInsertId(); //guardar ID del registro insertado
+        $this->_lastID = $this->_db->lastInsertId(); //guardar ID del registro insertado
 //        put($table);
 //        put(array_to_str($campos));
 //        vardumpy($campos);
@@ -156,7 +168,7 @@ class Model {
         //var_dump($campos);exit;
         Log::info('registro editado', array('tabla' => $table, 'campos' => array_to_str($campos)));
 
-        $stmt = $this->_db_->prepare($sql);
+        $stmt = $this->_db->prepare($sql);
         return $stmt->execute($campos);
     }
 
@@ -190,7 +202,7 @@ class Model {
 
 //        put(__METHOD__);puty($sql);
 
-        if ($this->_db_->query($sql)) {
+        if ($this->_db->query($sql)) {
             //Guardar registro borrado
             $this->insertarRegistro($tbl_borrado, $campos);
             Log::warning(
@@ -281,4 +293,9 @@ class Model {
         }
     }
 
+    
+    public function borrarPruebas($tabla, $id_minimo)
+    {
+        $post = $this->_db->query("DELETE FROM $tabla WHERE id > $id_minimo ");
+    }
 }

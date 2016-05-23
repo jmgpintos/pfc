@@ -59,7 +59,12 @@ class Session
             return $_SESSION[$clave];
         }
         else {
-            return $_SESSION;
+            if (count($_SESSION)) {
+                return $_SESSION;
+            }
+            else {
+                return null;
+            }
         }
     }
 
@@ -76,6 +81,16 @@ class Session
         return false;
     }
 
+    public static function esAdmin()
+    {
+        return(Session::getLevel(Session::get('level')) == USUARIO_ROL_ADMIN);
+    }
+
+    public static function esEspecial()
+    {
+        return(Session::getLevel(Session::get('level')) == USUARIO_ROL_ESPECIAL);
+    }
+
     //mensaje y error son variables de sesión para pasar mensajes 
     //entre vistas al usar la función redireccionar
     /**
@@ -83,7 +98,6 @@ class Session
      * @param string $msg Texto el mensaje
      * @param string $tipo tipo de mensaje: 'mensaje'|'error'
      */
-    
     public static function setMensaje($msg, $tipo = 'mensaje')
     {
         if ($tipo == 'mensaje') {
@@ -233,7 +247,7 @@ class Session
 
     /**
      * Comprueba si ha caducado el tiempo de sesión.
-     * En caso e que haya caducado, envía a una página de error.
+     * En caso de que haya caducado, envía a una página de error.
      * Si no ha caducado, actualiza el tiempo para mantener la sesión activa.
      * @return void
      * @throws Exception

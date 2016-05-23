@@ -7,11 +7,16 @@
 abstract class Controller
 {
 
+    protected $_model;
+    protected $_modulo;
+    protected $_tabla;
     protected $_view;
+    protected $_log;
 
     public function __construct()
     {
         $this->_view = new View(new Request);
+        $this->_log = new Log();
     }
 
     abstract public function index();
@@ -136,4 +141,18 @@ abstract class Controller
         return true;
     }
 
+    /**
+     * Pasa los mensajes de sesión a la vista
+     */
+    public function asignarMensajes()
+    {
+        if(Session::getMensaje()){
+            $this->_view->assign('_mensaje', Session::getMensaje());
+            Session::destroy('mensaje');
+        }
+        if(Session::getError()){
+            $this->_view->assign('_error', Session::getError());            
+            Session::destroy('error');
+        }
+    }
 }

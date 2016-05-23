@@ -6,4 +6,7 @@
             {$titulo }
         {/if}
     {/if}
+    {if isset($cuenta)}
+        &mdash; {$cuenta}
+    {/if}
 </h2>

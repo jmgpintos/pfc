@@ -84,6 +84,13 @@ class View extends Smarty
         );
 
         if (Session::get('autenticado')) {
+            if (Session::esAdmin() || Session::esEspecial()) {
+                $menu[] = array(
+                    'id' => 'usuario',
+                    'titulo' => 'Usuarios',
+                    'enlace' => BASE_URL . 'usuario'
+                );
+            }
             $menu[] = array(
                 'id' => 'login',
                 'titulo' => 'Logout',

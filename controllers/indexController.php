@@ -11,7 +11,7 @@ class indexController extends Controller
 //        $this->_model = new Model();
     }
 
-    public function index()
+    public function index($pagina=false)
     {
 //        $post = $this->loadModel('post');
 //        $posts = $post->getPosts();

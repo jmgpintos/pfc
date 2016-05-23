@@ -3,7 +3,7 @@
 class loginController extends Controller
 {
 
-    private $_model;
+//    private $_model;
 
     public function __construct()
     {
@@ -11,7 +11,7 @@ class loginController extends Controller
         $this->_model = $this->loadModel('login');
     }
 
-    public function index()
+    public function index($pagina=false)
     {
         if (Session::estaAutenticado()) {
             $this->redireccionar();
