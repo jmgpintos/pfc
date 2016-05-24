@@ -11,7 +11,7 @@ class loginController extends Controller
         $this->_model = $this->loadModel('login');
     }
 
-    public function index($pagina=false)
+    public function index()
     {
         if (Session::estaAutenticado()) {
             $this->redireccionar();
@@ -38,6 +38,11 @@ class loginController extends Controller
     public function cerrar()
     {
         Session::destroy();
+        
+        //Iniciamos sesión de nuevo para poder pasar el mensaje 
+        Session::init();
+        Session::setMensaje('Sesión finalizada');
+        
         $this->redireccionar();
     }
 
@@ -71,11 +76,12 @@ class loginController extends Controller
         }
 
         if ($error) {
-            $this->_view->_error = $mensaje;
+            $this->_view->assign('_error', $mensaje);
             $this->_view->renderizar('index', 'login');
             exit;
         }
 
+        Session::setMensaje( 'Usuario logueado como <strong>' . $row['username'] .'</strong>');
         return $row;
     }
 

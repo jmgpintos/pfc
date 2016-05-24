@@ -2,12 +2,16 @@
 $(function () {
     $('#form1').validate({
         rules: {
-            titulo: {required: true},
-            cuerpo: {required: true}
+            username: {required: true},
+            nombre: {required: true},
+            apellidos: {required: true},
+            email: {required: true}
         },
         messages: {
-            titulo: {required: "Debe introducir el titulo del post"},
-            cuerpo: {required: "Debe introducir el cuerpo del post"}
+            username: {required: "Debe introducir el nombre"},
+            nombre: {required: "Debe introducir el nombre"},
+            apellidos: {required: "Debe introducir los apellidos"},
+            email: {required: "Debe introducir el correo electrónico"}
         }
-    })
+    });
 });

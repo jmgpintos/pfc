@@ -1,7 +1,7 @@
 
 {if (isset($data) && count($data))}
-    <table class="table striped">
-       <thead>
+    <table class="table striped margin-top">
+        <thead>
             <tr>
                 {foreach item=it from=$columnas}
                     <th>{$it}</th>
@@ -25,8 +25,9 @@
             </tr>
         {/foreach}
     </table>
-        
+ <div class="padding-16 margin-top center blue-grey">
 {if isset($paginacion)}{$paginacion}{/if}
+</div>
 
 {else}
     No hay usuarios
@@ -35,10 +36,12 @@
 
 
 {if (Session::accesoView('especial'))}
-    <p>
-        <a href="{$_layoutParams.root}post/nuevo">Agregar post</a> | 
-        <a href="{$_layoutParams.root}usuario/nuevoUsuarioAuto">Crear 20 usuarios</a> | 
-        <a href="{$_layoutParams.root}usuario/borrarPruebas">Borrar pruebas</a>
-    </p>
+
+    <div class="padding-16 margin-top topbar border-blue">
+        <div class='right'>
+            <a href="{$_layoutParams.root}post/nuevo">Agregar post</a> | 
+            <a href="{$_layoutParams.root}usuario/nuevoUsuarioAuto">Crear 20 usuarios</a> | 
+            <a href="{$_layoutParams.root}usuario/borrarPruebas">Borrar pruebas</a></div>
+    </div>
 {/if}
 

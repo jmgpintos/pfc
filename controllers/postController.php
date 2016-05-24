@@ -68,7 +68,7 @@ class postController extends Controller
     {
         $this->_log->write(__METHOD__,LOG_DEBUG);
         if (!$this->existe($id)) {
-            Session::setMensaje('El Post no existe', 'error');
+            Session::setError('El Post no existe');
             $this->redireccionar($this->_modulo);
         }
 
@@ -100,7 +100,7 @@ class postController extends Controller
     {
         $this->_log->write(__METHOD__,LOG_DEBUG);
         if (!$this->existe($id)) {
-            Session::setMensaje('El Post no existe', 'error');
+            Session::setErro('El Post no existe');
             $this->redireccionar($this->_modulo);
         }
 
@@ -116,7 +116,7 @@ class postController extends Controller
             $this->_log->write('BORRAR POST -' . $post['id'] . " - " . $post['titulo'], LOG_NOTICE);
         }
         else {
-            Session::setMensaje('Se ha producido un error al borrar el registro', 'error');
+            Session::setError('Se ha producido un error al borrar el registro');
             $this->_log->write('ERROR AL BORRAR POST -' . $post['id'] . " - " . $post['titulo']);
         }
 
@@ -129,7 +129,7 @@ class postController extends Controller
         return ($this->filtrarInt($id) && $this->_model->getPost($this->filtrarInt($id)));
     }
 
-    public function validar()
+    private function validar()
     {
         $this->_log->write(__METHOD__,LOG_DEBUG);
         if (!$this->getTexto('titulo')) {

@@ -1,3 +1,4 @@
+<div class="container blue">
 <h2>
     {if isset($tituloView)}
         {$tituloView}
@@ -10,3 +11,4 @@
         &mdash; {$cuenta}
     {/if}
 </h2>
+</div>

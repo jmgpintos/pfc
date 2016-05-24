@@ -11,7 +11,7 @@ class Session
         session_start();
     }
 
-    /**
+    /** 
      * Finaliza sesión PHP o borra una variable de sesión determinada
      * @param string $clave Nombre de variable de sesión a borrar. Si es false, se finaliza la sesión
      */
@@ -94,18 +94,21 @@ class Session
     //mensaje y error son variables de sesión para pasar mensajes 
     //entre vistas al usar la función redireccionar
     /**
-     * Establece el valor y el tipo del mensaje
-     * @param string $msg Texto el mensaje
-     * @param string $tipo tipo de mensaje: 'mensaje'|'error'
+     * Establece el valor  del mensaje
+     * @param string $msg Texto del mensaje
      */
     public static function setMensaje($msg, $tipo = 'mensaje')
     {
-        if ($tipo == 'mensaje') {
             self::set('mensaje', $msg);
-        }
-        else {
-            self::set('error', $msg);
-        }
+    }
+    
+    /**
+     * Establece el valor  del error
+     * @param string $msg Texto del error
+     */
+    public static function setError($msg)
+    {
+        self::set('error', $msg);;
     }
 
     /**

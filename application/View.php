@@ -52,7 +52,7 @@ class View extends Smarty
 
         if (count($this->_js)) {
             $js = $this->_js;
-            $_layoutParams['js'] = $js;
+            $_params['js'] = $js;
         }
 
         $rutaView = ROOT . 'views' . DS . $this->_controlador . DS . $vista . '.tpl';
@@ -70,7 +70,20 @@ class View extends Smarty
 
     protected function getMenu()
     {
-        $menu = array(
+        $submenu['login'] = array(
+            array(
+                'id' => 'usuario',
+                'titulo' => 'Editar Perfil',
+                'enlace' => BASE_URL . 'usuario/editar/' . Session::get('id_usuario')
+            ),
+            array(
+                'id' => 'login',
+                'titulo' => 'Cerrar Sesión',
+                'enlace' => BASE_URL . 'login/cerrar'
+            )
+        );
+
+        $menu_usuario = array(
             array(
                 'id' => 'inicio',
                 'titulo' => 'Inicio',
@@ -81,33 +94,68 @@ class View extends Smarty
                 'titulo' => 'Posts',
                 'enlace' => BASE_URL . 'post'
             ),
+            array(
+                'id' => 'imagen',
+                'titulo' => 'Imágenes',
+                'enlace' => BASE_URL . 'imagen'
+            ),
         );
 
         if (Session::get('autenticado')) {
             if (Session::esAdmin() || Session::esEspecial()) {
-                $menu[] = array(
-                    'id' => 'usuario',
-                    'titulo' => 'Usuarios',
-                    'enlace' => BASE_URL . 'usuario'
+                $menu_admin = array(
+                    array(
+                        'id' => 'usuario',
+                        'titulo' => 'Usuarios',
+                        'enlace' => BASE_URL . 'usuario'
+                    ),
+                    array(
+                        'id' => 'categoria',
+                        'titulo' => 'Categorías',
+                        'enlace' => BASE_URL . 'categoria'
+                    ),
+                    array(
+                        'id' => 'licencia',
+                        'titulo' => 'Licencias',
+                        'enlace' => BASE_URL . 'licencia'
+                    ),
                 );
             }
-            $menu[] = array(
-                'id' => 'login',
-                'titulo' => 'Logout',
-                'enlace' => BASE_URL . 'login/cerrar'
+
+            $menu_usuario[] = array(
+                'id' => 'username',
+                'titulo' => 'Usuario: <strong>' . Session::get('usuario') . '</strong>',
+                'enlace' => BASE_URL . 'login/cerrar',
+                'derecha' => true,
+                'submenu' => $submenu['login'],
             );
+//            $menu_usuario[] = array(
+//                'id' => 'login',
+//                'titulo' => 'Logout',
+//                'enlace' => BASE_URL . 'login/cerrar',
+//                'derecha' => true
+//            );
         }
         else {
-            $menu[] = array(
+            $menu_usuario[] = array(
                 'id' => 'login',
                 'titulo' => 'Iniciar sesión',
-                'enlace' => BASE_URL . 'login'
+                'enlace' => BASE_URL . 'login',
+                'derecha' => true
             );
-            $menu[] = array(
+            $menu_usuario[] = array(
                 'id' => 'registro',
                 'titulo' => 'Registro',
-                'enlace' => BASE_URL . 'registro'
+                'enlace' => BASE_URL . 'registro',
+                'derecha' => true
             );
+        }
+
+        if (Session::get('autenticado') && (Session::esAdmin() || Session::esEspecial())) {
+            $menu = array_merge($menu_usuario, $menu_admin);
+        }
+        else {
+            $menu = $menu_usuario;
         }
 
 

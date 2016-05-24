@@ -6,7 +6,8 @@
  * Métodos para acceder a los datos
  */
 
-class Model {
+class Model
+{
 
     /**
      * Objeto database sobre el que se ejecutan las consultas
@@ -20,14 +21,16 @@ class Model {
      */
     protected $_lastID;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->_db = new Database();
     }
 
-    public function getLast_id() {
+    public function getLast_id()
+    {
         return $this->_lastID;
     }
-    
+
     public function getCount($table)
     {
         $table = $this->getTableName($table);
@@ -37,10 +40,10 @@ class Model {
         $row = $this->_db->query($SQL);
 
         return $row->fetch()[0];
-        
     }
 
-    public function getSQL($sql) {
+    public function getSQL($sql)
+    {
         $row = $this->_db->query($sql);
 
         $rs = $row->fetchAll(PDO::FETCH_ASSOC);
@@ -54,7 +57,8 @@ class Model {
      * @param string $table 
      * @return array RecordSet con todos los registros de $table
      */
-    public function getAll($table) {
+    public function getAll($table)
+    {
 
         $table = $this->getTableName($table);
 
@@ -72,7 +76,8 @@ class Model {
      * @param type $index
      * @return array RecorSet con el registro solicitado
      */
-    public function getById($table, $index) {
+    public function getById($table, $index)
+    {
 
         $table = $this->getTableName($table);
 
@@ -93,7 +98,8 @@ class Model {
      * @param array $campos lista de campos y valores del tipo (':nombre_campo' => 'valor_campo')
      * @return int id del registro insertado
      */
-    public function insertarRegistro($table, array $campos) {
+    public function insertarRegistro($table, array $campos)
+    {
 
         $table = $this->getTableName($table);
 
@@ -110,7 +116,8 @@ class Model {
             $str_columnas.=ltrim($k, ":") . ', ';
         }
 
-        $sql = "INSERT INTO $table (" . rtrim($str_columnas, ', ') . ") VALUES(" . rtrim($str_campos, ', ') . ")"; //el primer campo (null) es el id
+        $sql = "INSERT INTO $table (" . rtrim($str_columnas, ', ') . ") VALUES(" . rtrim($str_campos,
+                        ', ') . ")"; //el primer campo (null) es el id
         //        vardump($campos);
         //        put($sql);exit;
         //ejecutar consulta
@@ -124,7 +131,8 @@ class Model {
 
         if ($table != $this->tbl_log && $table != $this->tbl_borrado) {
 
-            Log::info('registro insertado', array('tabla' => $table, 'campos' => array_to_str($campos)));
+            Log::info('registro insertado',
+                    array('tabla' => $table, 'campos' => array_to_str($campos)));
         }
 //        puty($this->_lastID);
         return $this->_lastId;
@@ -138,7 +146,8 @@ class Model {
      * @param array $campos  lista de campos y valores del tipo (':nombre_campo' => 'valor_campo')
      * @return //TODO
      */
-    public function editarRegistro($table, $index, array $campos) {
+    public function editarRegistro($table, $index, array $campos)
+    {
         $table = $this->getTableName($table);
 
         $id = (int) $index;
@@ -166,7 +175,7 @@ class Model {
 
         //put($sql);
         //var_dump($campos);exit;
-        Log::info('registro editado', array('tabla' => $table, 'campos' => array_to_str($campos)));
+//        Log::info('registro editado', array('tabla' => $table, 'campos' => array_to_str($campos)));
 
         $stmt = $this->_db->prepare($sql);
         return $stmt->execute($campos);
@@ -180,7 +189,8 @@ class Model {
      * 
      * return bool
      */
-    public function eliminarRegistro($table, $index) {
+    public function eliminarRegistro($table, $index)
+    {
         $table = $this->getTableName($table);
 
         $id = (int) $index;
@@ -188,43 +198,45 @@ class Model {
         //Datos de registro borrado
         $reg_borrado = $this->getById($table, $id);
 
-        $string_registro_borrado = array_to_str($reg_borrado);
-
-        $tbl_borrado = $this->getTableName('borrado');
-        $campos = array(
-            ':user' => Session::get('id_usuario'),
-            ':tabla' => $table,
-            ':descripcion' => $string_registro_borrado
-        );
-
         //Borrar registro
         $sql = "DELETE FROM $table WHERE id=$id";
 
-//        put(__METHOD__);puty($sql);
-
         if ($this->_db->query($sql)) {
-            //Guardar registro borrado
-            $this->insertarRegistro($tbl_borrado, $campos);
-            Log::warning(
-                    'registro borrado', array(
-                'tabla' => $table,
-                'campos' => $string_registro_borrado,
-            ));
-            return true;
-        } else {
-            Log::notice('intento de borrado de registro', array(
-                'tabla' => $table,
-                'campos' => $string_registro_borrado,
-            ));
+            return $reg_borrado;
+        }
+        else {
             return false;
         }
+
+
+//        put(__METHOD__);puty($sql);
+//        if ($this->_db->query($sql)) {
+//            //Guardar registro borrado
+//            $this->insertarRegistro($tbl_borrado, $campos);
+//            Log::warning(
+//                    'registro borrado',
+//                    array(
+//                'tabla' => $table,
+//                'campos' => $string_registro_borrado,
+//            ));
+//            return true;
+//        }
+//        else {
+//            Log::notice('intento de borrado de registro',
+//                    array(
+//                'tabla' => $table,
+//                'campos' => $string_registro_borrado,
+//            ));
+//            return false;
+//        }
     }
 
     /**
      * Cambia la fecha delúltimo acceso del usuario con id $index
      * @param type $indexid del usuario
      */
-    public function cambiarUltimoAcceso($index) {
+    public function cambiarUltimoAcceso($index)
+    {
         $id = (int) $index;
 
         $table = TABLES_PREFIX . 'usuario';
@@ -242,7 +254,8 @@ class Model {
      * @param string $table Nombre de la tabla
      * @return array Nombre de los campos de $table
      */
-    public function getFields($table) {
+    public function getFields($table)
+    {
 
         $table = $this->getTableName($table);
 
@@ -259,7 +272,8 @@ class Model {
      * @param string $table Nombre de la tabla
      * @return array Info de $table
      */
-    public function getTableInfo($table) {
+    public function getTableInfo($table)
+    {
         $sql = "SHOW COLUMNS FROM  {$table}";
 
         $row = $this->_db->query($sql);
@@ -267,11 +281,13 @@ class Model {
         return $row->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getColumnas($data) {
+    public function getColumnas($data)
+    {
 //        put(__METHOD__);
         if (count($data)) {
             return array_keys($data[0]);
-        } else {
+        }
+        else {
             return array();
         }
     }
@@ -282,20 +298,22 @@ class Model {
      * @param string $table
      * @return string
      */
-    public function getTableName($table) {
+    public function getTableName($table)
+    {
 
         $len_prefix = strlen(TABLES_PREFIX);
 
         if (substr($table, 0, $len_prefix) == TABLES_PREFIX) {
             return $table;
-        } else {
+        }
+        else {
             return TABLES_PREFIX . $table;
         }
     }
 
-    
     public function borrarPruebas($tabla, $id_minimo)
     {
         $post = $this->_db->query("DELETE FROM $tabla WHERE id > $id_minimo ");
     }
+
 }

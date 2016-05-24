@@ -25,6 +25,8 @@ try {
     require_once APP_PATH . 'Log.php';
 
     require_once LIB_PATH . 'helpers/helper-functions.php';
+    require_once LIB_PATH . 'php/f_datetime.php';
+    require_once LIB_PATH . 'php/f_string.php';
 
 //    echo Hash::getHash('SHA1', '1234', HASH_KEY);exit;
     Session::init();

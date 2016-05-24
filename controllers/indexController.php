@@ -18,6 +18,7 @@ class indexController extends Controller
 //
 //        $this->_view->columnas = $post->getColumnas($posts);
 //        $this->_view->posts = $posts;
+        $this->asignarMensajes();
         $this->_view->assign('titulo', "Portada");
         $this->_view->renderizar('index', 'inicio');
     }

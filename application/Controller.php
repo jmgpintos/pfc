@@ -117,7 +117,7 @@ abstract class Controller
             return trim($_POST[$clave]);
         }
     }
-    
+
     /**
      * Sanitizar cadenas alfanuméricas
      * Sólo acepta caracteres alfabéticos, numéricos y guión bajo
@@ -126,19 +126,38 @@ abstract class Controller
      */
     protected function getAlphaNum($clave)
     {
-        if(isset($_POST[$clave]) && !empty($_POST[$clave])){
+        if (isset($_POST[$clave]) && !empty($_POST[$clave])) {
             $_POST[$clave] = (string) preg_replace('/[^A-Z0-9_]/i', '', $_POST[$clave]);
             return trim($_POST[$clave]);
         }
     }
-    
+
     public function validarEmail($email)
     {
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
-        
+
         return true;
+    }
+
+    /**
+     * Trata el parámetro $pagina
+     * @param type $pagina
+     * @return type
+     */
+    public function getNumPagina($pagina)
+    {
+        if (!$this->filtrarInt($pagina)) {
+            $pagina = false;
+        }
+        else {
+            $pagina = (int) $pagina;
+        }
+
+        Session::set('pagina', $pagina);
+        return $pagina;
     }
 
     /**
@@ -146,13 +165,16 @@ abstract class Controller
      */
     public function asignarMensajes()
     {
-        if(Session::getMensaje()){
+        if (Session::getMensaje()) {
             $this->_view->assign('_mensaje', Session::getMensaje());
             Session::destroy('mensaje');
         }
-        if(Session::getError()){
-            $this->_view->assign('_error', Session::getError());            
+        if (Session::getError()) {
+            $this->_view->assign('_error', Session::getError());
             Session::destroy('error');
         }
+        
+        $this->_view->assign('_pagina', Session::get('pagina'));
     }
+
 }

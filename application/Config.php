@@ -63,3 +63,7 @@ if (DEBUG) {
 else {
     define('LOG_LEVEL', LOG_NOTICE);
 }
+
+
+define('ACCION_EDITAR', 'editar');
+define('ACCION_NUEVO', 'nuevo');

@@ -355,9 +355,15 @@ ul.ul li:last-child {
     display: block;
     padding: 8px 16px;
 }
-.navbar li a:hover {
-    color: #000;
-    background-color: #ccc;
+.navbar li a:hover,
+.navbar li a.current
+ {
+    color: blue;
+    background-color: lightblue;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+/*    color: #000;
+    background-color: #ccc;*/
 }
 .navbar .dropdown-hover, .navbar .dropdown-click {
     position: static;
@@ -1655,29 +1661,31 @@ body{
 #top_menu li a:hover {
     background-color: #111;
 }
-
+#top_menu li .dropdown-content a {
+    color:black;
+}
 #top_menu li#current a{
-   background: rgba(255,255,255,.5);
+/*   background: rgba(255,255,255,.5);
    color:black;
    font-weight: bold;
-   text-transform: uppercase;
+   text-transform: uppercase;*/
 }
 
 #contenido{
     padding: 10px;
 }
-
+/*
 #contenido h2{
     color:darkred;
     font-weight: bold;
-}
+}*/
 
 #footer{
-    border-top: 12px solid grey;
+/*    border-top: 12px solid grey;
     background: darkred;
     color: white;
-    padding: 10px;
-    margin-bottom: 100px;
+    padding: 10px;*/
+    /*margin-bottom: 100px;*/
 }
 
 #info{

@@ -7,7 +7,7 @@ class usuarioController extends Controller
     {
         parent::__construct();
         $this->_model = $this->loadModel('usuario');
-        $this->_table = 'usuario';
+        $this->_tabla = 'usuario';
         $this->_modulo = 'usuario';
     }
 
@@ -15,12 +15,7 @@ class usuarioController extends Controller
     {
         $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
 
-        if (!$this->filtrarInt($pagina)) {
-            $pagina = false;
-        }
-        else {
-            $pagina = (int) $pagina;
-        }
+        $pagina = $this->getNumPagina($pagina);
 
         $this->asignarMensajes();
 
@@ -33,10 +28,46 @@ class usuarioController extends Controller
         $this->_view->assign('paginacion',
                 $paginador->getView('paginacion', $this->_modulo . '/index'));
         $this->_view->assign('columnas', $this->_model->getColumnas($data));
-        $this->_view->assign('cuenta', $this->_model->getCount($this->_table));
+        $this->_view->assign('cuenta', $this->_model->getCount($this->_tabla));
         $this->_view->assign('titulo', 'Usuarios');
         $this->_view->assign('tituloView', 'Lista de usuarios');
         $this->_view->renderizar('index', $this->_modulo);
+    }
+
+    public function editar($id)
+    {
+        $this->_log->write(__METHOD__, LOG_DEBUG);
+
+        $this->asignarMensajes();
+
+        $this->_view->assign('titulo', 'Usuarios');
+        $this->_view->assign('tituloView', 'Editar usuario');
+        $this->_view->setJs(array('validacion'));
+
+        if ($this->getInt('guardar') == 1) {
+            $this->_view->assign('datos', $_POST); //TODO limpiar $_POST
+
+            $this->validar(ACCION_EDITAR);
+//guardar datos
+            $campos = array(
+                ':username' => $this->getAlphaNum('username'),
+                ':nombre' => $this->getPostParam('nombre'),
+                ':apellidos' => $this->getPostParam('apellidos'),
+                ':email' => $this->getPostParam('email'),
+                ':telefono' => $this->getPostParam('telefono')
+            );
+            $this->_model->editarRegistro($this->_tabla, $this->filtrarInt($id), $campos);
+
+            Session::setMensaje('El Usuario ha sido editado correctamente');
+
+            $this->_log->write('EDITAR USUARIO id: ' . $id);
+            $this->redireccionar($this->_modulo);
+        }
+
+        $data = $this->_model->getById($this->_tabla, $this->filtrarInt($id));
+        $this->_view->assign('data', $data);
+
+        $this->_view->renderizar('editar', $this->_modulo);
     }
 
     public function nuevo()
@@ -46,13 +77,13 @@ class usuarioController extends Controller
         $this->_view->assign('titulo', "Nuevo usuario");
         $this->_view->setJs(array('validacion'));
 
-        //
+//
         if ($this->getInt('guardar') == 1) {
             $this->_view->assign('datos', $_POST); //TODO limpiar $_POST
 
-            $this->validar();
+            $this->validar(ACCION_NUEVO);
 
-            //guardar datos
+//guardar datos
             /*
               +-------------------------+------------------+------+-----+---------+----------------+
               | Field                   | Type             | Null | Key | Default | Extra          |
@@ -74,10 +105,9 @@ class usuarioController extends Controller
               | fecha_modificacion      | date             | YES  |     | NULL    |                |
               +-------------------------+------------------+------+-----+---------+----------------+
              */
-            $campos = array(
-            );
+            $campos = array();
             $this->_model->insertarRegistro(
-                    $this->_table,
+                    $this->_tabla,
                     array(
                 ':id_rol' => DEFAULT_ROLE,
                 ':estado' => 1,
@@ -104,6 +134,33 @@ class usuarioController extends Controller
         $this->_view->renderizar('nuevo', $this->_modulo);
     }
 
+    public function eliminar($id)
+    {
+        $id = $this->filtrarInt($id);
+        $this->_log->write(__METHOD__, LOG_DEBUG);
+
+        if (!($data = $this->_model->getById($this->_tabla, $id))) {
+            Session::setError('El Usuario con id #' . $id . ' no existe');
+            $this->redireccionar($this->_modulo);
+        }
+
+        if ($this->_model->eliminarRegistro($this->_tabla, $id)) {
+            Session::setMensaje(
+                    "El Usuario # " . $data['id'] . " - <strong>" . $data['username'] . "</strong>"
+                    . " correspondiente a <i>" . $data['nombre'] . " " . $data['apellidos']. "</i>"
+                    . " ha sido borrado correctamente");
+
+            $this->_log->write('BORRAR USUARIO -' . $data['id'] . " - " . $data['username'],
+                    LOG_NOTICE);
+        }
+        else {
+            Session::setError('Se ha producido un error al borrar el registro');
+            $this->_log->write('ERROR AL BORRAR USUARIO -' . $data['id'] . " - " . $data['username']);
+        }
+
+        $this->redireccionar($this->_modulo);
+    }
+
     public function nuevoUsuarioAuto()
     {
         $this->_log->write(__METHOD__, LOG_DEBUG);
@@ -122,6 +179,65 @@ class usuarioController extends Controller
         $this->_model->borrarPruebas($this->_tabla, 40);
 
         $this->redireccionar($this->_modulo);
+    }
+
+    private function validar($accion)
+    {
+        $this->_log->write(__METHOD__, LOG_DEBUG);
+
+
+        $error = false;
+        $mensaje = null;
+
+        if (!$this->getAlphaNum('username')) {
+            $mensaje = 'Debe introducir un nombre de usuario';
+            $error = true;
+        }
+        elseif (!$this->getPostParam('nombre')) {
+            $mensaje = 'Debe introducir el nombre del usuario';
+            $error = true;
+        }
+        elseif (!$this->getPostParam('apellidos')) {
+            $mensaje = 'Debe introducir los apellidos del usuario';
+            $error = true;
+        }
+        elseif (!$this->validarEmail($this->getPostParam('email'))) {
+            put($this->getPostParam('email'));
+            $mensaje = 'Debe introducir una dirección de correo electrónico válida';
+            $error = true;
+        }
+
+        $row = $this->_model->getById($this->_tabla, $this->getInt('id'));
+        if ($accion == ACCION_NUEVO) {//Comprobar que el usuario existe
+            $row = $this->_model->getUsuario(
+                    $this->getAlphaNum('usuario'), $this->getSql('pass')
+            );
+
+            if (!$error) {
+                if (!$row) {
+                    $mensaje = 'Usuario y/o password incorrecto';
+                    $error = true;
+                }
+                else if ($row['estado'] != 1) {
+                    $mensaje = 'Este usuario no está habilitado';
+                    $error = true;
+                }
+            }
+        }
+
+        if ($error) {
+            $this->_view->assign('_error', $mensaje);
+            $this->_view->assign('data', $_POST);
+            $this->_view->renderizar($accion, 'login');
+            exit;
+        }
+        if ($accion == ACCION_NUEVO) {
+            Session::setMensaje('Usuario editado <strong>' . $row['username'] . '</strong>');
+        }
+        else {
+            Session::setMensaje('Usuario creado como <strong>' . $row['username'] . '</strong>');
+        }
+        return $row;
     }
 
 }

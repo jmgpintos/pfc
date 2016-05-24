@@ -16,7 +16,7 @@ class loginModel extends Model
                 . " AND password = '" . Hash::getHash('sha1', $password, HASH_KEY) . "'"
         );
 
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_ASSOC);
     }
 
 }

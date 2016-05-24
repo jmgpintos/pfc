@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="es">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{$titulo|default:""}{if isset($titulo)} | {/if}{$_layoutParams.configs.app_name}</title>
 
         <link rel="stylesheet" href="{$_layoutParams.ruta_css}estilos.css">
@@ -14,10 +15,10 @@
             {/foreach}
         {/if}
     </head>
-    <body class="container khaki">
+    <body class=" light-blue">
         <div id="main">
             {include file=$_layoutParams.includes.header}
-            <div id="contenido" class="container khaki">
+            <div id="contenido" class="container padding-xlarge white">
                 <noscript>
                 <div>Para el correcto funcionamiento de la aplicación debe activar el soporte de javascript</div>
                 </noscript>
