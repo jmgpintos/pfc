@@ -70,18 +70,20 @@ class View extends Smarty
 
     protected function getMenu()
     {
-        $submenu['login'] = array(
-            array(
-                'id' => 'usuario',
-                'titulo' => 'Editar Perfil',
-                'enlace' => BASE_URL . 'usuario/editar/' . Session::get('id_usuario')
-            ),
-            array(
-                'id' => 'login',
-                'titulo' => 'Cerrar Sesión',
-                'enlace' => BASE_URL . 'login/cerrar'
-            )
-        );
+        if (Session::estaAutenticado()) {
+            $submenu['login'] = array(
+                array(
+                    'id' => 'usuario',
+                    'titulo' => 'Editar Perfil',
+                    'enlace' => BASE_URL . 'usuario/editar/' . Session::get('id_usuario')
+                ),
+                array(
+                    'id' => 'login',
+                    'titulo' => 'Cerrar Sesión',
+                    'enlace' => BASE_URL . 'login/cerrar'
+                )
+            );
+        }
 
         $menu_usuario = array(
             array(
@@ -101,7 +103,7 @@ class View extends Smarty
             ),
         );
 
-        if (Session::get('autenticado')) {
+        if (Session::estaAutenticado()) {
             if (Session::esAdmin() || Session::esEspecial()) {
                 $menu_admin = array(
                     array(
@@ -151,7 +153,7 @@ class View extends Smarty
             );
         }
 
-        if (Session::get('autenticado') && (Session::esAdmin() || Session::esEspecial())) {
+        if (Session::estaAutenticado() && (Session::esAdmin() || Session::esEspecial())) {
             $menu = array_merge($menu_usuario, $menu_admin);
         }
         else {

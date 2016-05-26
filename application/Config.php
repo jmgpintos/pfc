@@ -25,6 +25,22 @@ else {
     define('MAIL_FROM', 'admin@bimagenes.hol.es');
 }
 
+/*
+ * Config AGL
+    define('BASE_URL', 'http://aglinformatica.es:6080/jmgarcia/'); 
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'jmgarcia');
+    define('DB_PASS', 'P38086586n');
+    define('DB_NAME', 'd2016_jmgarcia');
+    define('DB_CHAR', 'utf8');
+
+    define('TABLES_PREFIX', '');
+
+    define('MAIL_FROM', 'admin@bimagenes.hol.es'); 
+ 
+ */
+
+
 define('DEFAULT_CONTROLLER', 'index');
 define('DEFAULT_LAYOUT', 'default');
 
@@ -67,3 +83,11 @@ else {
 
 define('ACCION_EDITAR', 'editar');
 define('ACCION_NUEVO', 'nuevo');
+
+
+//Constantes para imagenes
+define('IMAGE_FILE_PATH', ROOT . 'public' . DS . 'img' . DS . 'fotos' . DS);
+define('IMAGE_FILE_PREFIX', 'upl_');
+define('THUMBNAIL_FILE_PREFIX', 'thumb_');
+define('THUMBNAIL_LONG_SIDE', 100);
+define('THUMBNAIL_SHORT_SIDE', 70);

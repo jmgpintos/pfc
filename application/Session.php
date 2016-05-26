@@ -74,7 +74,7 @@ class Session
      */
     public static function estaAutenticado()
     {
-        if (self::get('autenticado')) {
+        if (isset($_SESSION['autenticado'])) {
             return true;
         }
 
