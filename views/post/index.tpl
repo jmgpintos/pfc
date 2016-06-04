@@ -1,7 +1,7 @@
 
 {if (isset($posts) && count($posts))}
     <table class="table striped">
-       <thead>
+        <thead>
             <tr>
                 {foreach item=it from=$columnas}
                     <th>{$it}</th>
@@ -15,9 +15,14 @@
                 <td>{$it.cuerpo}</td>
 
                 {if (Session::accesoView('especial'))}
-                    <td><a href="{$_layoutParams.root}post/editar/{$it.id}">Editar</a></td>
-                    <td><a href="{$_layoutParams.root}post/eliminar/{$it.id}">Eliminar</a></td>
-
+                    <td>
+                        <a href="{$_layoutParams.root}{$controlador}editar/{$it.id}">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a href="{$_layoutParams.root}{$controlador}eliminar/{$it.id}">
+                            <i class="fa fa-close text-red"></i>
+                        </a>
+                    </td>
                 {/if}
             </tr>
         {/foreach}
@@ -26,8 +31,7 @@
     No hay posts
 {/if}
 
-
-{if isset($paginacion)}{$paginacion}{/if}
+{include file=$_layoutParams.includes.paginacion}
 
 {if (Session::accesoView('especial'))}
     <p>

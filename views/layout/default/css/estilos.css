@@ -131,7 +131,8 @@ pre, textarea {
 /*End extract from normalize.css*/
 
 html, body {
-    font-family: Verdana, sans-serif;
+    /*font-family: Verdana, sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
     font-size: 15px;
     line-height: 1.5;
 }
@@ -139,7 +140,8 @@ html {
     overflow-x: hidden;
 }
 h1, h2, h3, h4, h5, h6, .slim, .wide {
-    font-family: "Segoe UI", Arial, sans-serif;
+    /*font-family: "Segoe UI", Arial, sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
 }
 h1 {
     font-size: 36px;
@@ -1617,16 +1619,6 @@ input[type=checkbox].check:disabled+.validate, input[type=radio].radio:disabled+
 
 
 
-body{
-    margin: 0;
-    background: silver;
-    font-family: Arial;
-/*    padding-left: 40px;
-    padding-right: 40px;*/
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
 #main{
     width: 100%;
     background: white;
@@ -1714,13 +1706,18 @@ body{
 }
 
 
-table, td,th{
-    border-collapse: collapse;
-    border:1px solid black;
-    padding: 5px;
-}
 
 h1>a{
     color:white;
     text-decoration: none;
+}
+table a{
+    text-decoration: none;
+}
+table.imagenes td{
+    vertical-align: middle;
+}
+
+.destacado{
+    font-weight: bold;
 }

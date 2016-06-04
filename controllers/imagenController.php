@@ -3,18 +3,23 @@
 class imagenController extends Controller
 {
 
-    private $_k = 'imagen';
+    private $_nombreModulo = 'imagen';
 
     public function __construct()
     {
         parent::__construct();
-        $this->_model = $this->loadModel($this->_k);
-        $this->_tabla = $this->_k;
-        $this->_modulo = $this->_k;
+        $this->_model = $this->loadModel($this->_nombreModulo);
+        $this->_tabla = $this->_nombreModulo;
+        $this->_modulo = $this->_nombreModulo;
     }
 
-    public function index($pagina = false)
+    public function index($estilo ='card', $pagina = false)
     {
+        $registrosPorPagina = array(
+            'list' =>REGISTROS_POR_PAGINA_LIST,
+            'table' =>REGISTROS_POR_PAGINA_TABLE,
+            'card' =>REGISTROS_POR_PAGINA_CARD,
+        );
         $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
 
         $pagina = $this->getNumPagina($pagina);
@@ -23,16 +28,22 @@ class imagenController extends Controller
 
         $this->getLibrary('paginador');
         $paginador = new Paginador();
-        $data = $paginador->paginar($this->_model->getAll($this->_tabla), $pagina);
+        $campos = array('nombre', 'nombre_fichero', 'ancho_px');
+        $data = $paginador->paginar($this->_model->getAll(), $pagina, $registrosPorPagina[$estilo]);
 
         $this->_view->assign('data', $data);
+        $this->_view->assign('estilo', $estilo);
+        if ($this->_model->getCount($this->_tabla) > $registrosPorPagina[$estilo]) {
         $this->_view->assign('paginacion',
-                $paginador->getView('paginacion', $this->_modulo . '/index'));
-        $this->_view->assign('columnas', $this->_model->getColumnas($data));
+                $paginador->getView('paginacion', $this->_modulo . '/index/'. $estilo));
+        }
+        $this->_view->assign('columnas', array('','nombre', 'dimensiones', 'Tamaño', 'categoría', 'licencia'));
         $this->_view->assign('cuenta', $this->_model->getCount($this->_tabla));
         $this->_view->assign('titulo', 'Imágenes');
         $this->_view->assign('tituloView', 'Lista de imágenes');
-        $this->_view->renderizar('index', $this->_modulo);
+        $this->_view->assign('controlador', $this->_modulo. '/');
+        
+        $this->_view->renderizar($estilo, $this->_modulo);
     }
 
     public function nuevo()
@@ -88,7 +99,7 @@ class imagenController extends Controller
             $this->_log->write('ERROR AL BORRAR IMAGEN -' . $data['id'] . " - " . $data['nombre']);
         }
 
-        $this->redireccionar($this->_modulo);
+        $this->redireccionar($this->_modulo. '/list');
     }
 
     private function validar()

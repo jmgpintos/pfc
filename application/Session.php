@@ -11,7 +11,7 @@ class Session
         session_start();
     }
 
-    /** 
+    /**
      * Finaliza sesión PHP o borra una variable de sesión determinada
      * @param string $clave Nombre de variable de sesión a borrar. Si es false, se finaliza la sesión
      */
@@ -68,6 +68,13 @@ class Session
         }
     }
 
+    public function getId()
+    {
+        if (self::estaAutenticado()) {
+            return self::get('id_usuario');
+        }
+    }
+
     /**
      * Devuelve true si el usuario está autenticado
      * @return boolean
@@ -99,16 +106,17 @@ class Session
      */
     public static function setMensaje($msg, $tipo = 'mensaje')
     {
-            self::set('mensaje', $msg);
+        self::set('mensaje', $msg);
     }
-    
+
     /**
      * Establece el valor  del error
      * @param string $msg Texto del error
      */
     public static function setError($msg)
     {
-        self::set('error', $msg);;
+        self::set('error', $msg);
+        ;
     }
 
     /**
@@ -143,7 +151,7 @@ class Session
      */
     public static function acceso($level)
     {
-        if (!Session::get('autenticado')) {
+        if (!Session::estaAutenticado()) {
             header('location:' . BASE_URL . 'error/access/5050');
             exit;
         }
@@ -165,7 +173,7 @@ class Session
      */
     public static function accesoView($level)
     {
-        if (!Session::get('autenticado')) {
+        if (!Session::estaAutenticado()) {
             return false;
         }
 
@@ -203,7 +211,7 @@ class Session
      */
     public static function accesoEstricto(array $level, $noAdmin = false)
     {
-        if (!Session::get('autenticado')) {
+        if (!Session::estaAutenticado()) {
             header('location:' . BASE_URL . 'error/access/5050');
             exit;
         }
@@ -228,7 +236,7 @@ class Session
 
     public static function accesoViewEstricto(array $level, $noAdmin = false)
     {
-        if (!Session::get('autenticado')) {
+        if (!Session::estaAutenticado()) {
             return false;
         }
 
@@ -257,20 +265,22 @@ class Session
      */
     public static function tiempo()
     {
-        if (!Session::get('tiempo') || !defined('SESSION_TIME')) {
-            throw new Exception('No se ha definido el tiempo de sesión');
-        }
+        if(self::estaAutenticado()) {
+            if (!Session::get('tiempo') || !defined('SESSION_TIME')) {
+                throw new Exception('No se ha definido el tiempo de sesión');
+            }
 
-        if (SESSION_TIME == 0) {
-            return;
-        }
+            if (SESSION_TIME == 0) {
+                return;
+            }
 
-        if (time() - Session::get('tiempo') > (SESSION_TIME * 60)) {
-            Session::destroy();
-            header('location:' . BASE_URL . 'error/access/8080');
-        }
-        else {
-            Session::set('tiempo', time());
+            if (time() - Session::get('tiempo') > (SESSION_TIME * 60)) {
+                Session::destroy();
+                header('location:' . BASE_URL . 'error/access/8080');
+            }
+            else {
+                Session::set('tiempo', time());
+            }
         }
     }
 

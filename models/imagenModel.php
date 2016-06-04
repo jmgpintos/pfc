@@ -19,6 +19,22 @@ class imagenModel extends Model
         parent::__construct();
     }
 
+    /**
+     * Recuperar todos los registros de la tabla $table
+     * 
+     * @param string $table 
+     * @return array RecordSet con todos los registros de $table
+     */
+     public function getAll($table='imagen', array $campos = array())
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria; ";
+        $row = $this->_db->query($SQL);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function insertarImagen($nombre, $imagen)
     {
         /*
@@ -66,18 +82,18 @@ class imagenModel extends Model
 
         /*
          * id                     
-          ,id_categoria          
-          ,id_licencia           
-          ,ancho_px              
-          ,alto_px               
-          ,peso_kb               
-          ,nombre_fichero        
-          ,nombre                
-          ,descripcion           
-          ,id_usuario_creacion   
-          ,fecha_creacion        
+          ,id_categoria
+          ,id_licencia
+          ,ancho_px
+          ,alto_px
+          ,peso_kb
+          ,nombre_fichero
+          ,nombre
+          ,descripcion
+          ,id_usuario_creacion
+          ,fecha_creacion
           ,id_usuario_modificacion
-          ,fecha_modificacion    
+          ,fecha_modificacion
 
          */
 //        $this->_db->prepare("INSERT INTO imagen (id,nombre,nombre_fichero) VALUES (null, :nombre, :nombre_fichero)")
@@ -87,14 +103,16 @@ class imagenModel extends Model
 //                            ':nombre_fichero' => $imagen
 //                        )
 //        );
-        $this->_db->prepare("INSERT INTO imagen (id,ancho_px,alto_px,peso_kb,nombre_fichero,nombre) VALUES (null, :ancho, :alto, :peso, :nombre_fichero, :nombre)")
+        $this->_db->prepare("INSERT INTO imagen (id,ancho_px,alto_px,peso_kb,nombre_fichero,nombre, id_licencia, id_categoria) VALUES (null, :ancho, :alto, :peso, :nombre_fichero, :nombre, :id_licencia, :id_categoria)")
                 ->execute(
                         array(
                             ':ancho' => $imagen->image_src_x,
                             ':alto' => $imagen->image_src_y,
-                            ':peso' => floor($imagen->file_src_size/1024),
+                            ':peso' => floor($imagen->file_src_size / 1024),
                             ':nombre' => $nombre,
-                            ':nombre_fichero' => $imagen->file_dst_name
+                            ':nombre_fichero' => $imagen->file_dst_name,
+                            ':id_licencia' => 1,
+                            ':id_categoria' => 1,
                         )
         );
     }

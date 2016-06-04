@@ -13,11 +13,11 @@ if (DEBUG) {
     define('MAIL_FROM', 'admin@bancodeimagenes.lan');
 }
 else {
-    define('BASE_URL', 'http://bimagenes.hol.es/'); //Para acceder a archivos desde las vistas 
+    define('BASE_URL', 'http://aglinformatica.es:6080/jmgarcia/');
     define('DB_HOST', 'localhost');
-    define('DB_USER', 'u667159124_usu');
-    define('DB_PASS', 'Pa$$word');
-    define('DB_NAME', 'u667159124_banco');
+    define('DB_USER', 'jmgarcia');
+    define('DB_PASS', 'P38086586n');
+    define('DB_NAME', 'd2016_jmgarcia');
     define('DB_CHAR', 'utf8');
 
     define('TABLES_PREFIX', '');
@@ -27,17 +27,31 @@ else {
 
 /*
  * Config AGL
-    define('BASE_URL', 'http://aglinformatica.es:6080/jmgarcia/'); 
-    define('DB_HOST', 'localhost');
-    define('DB_USER', 'jmgarcia');
-    define('DB_PASS', 'P38086586n');
-    define('DB_NAME', 'd2016_jmgarcia');
-    define('DB_CHAR', 'utf8');
+  define('BASE_URL', 'http://aglinformatica.es:6080/jmgarcia/');
+  define('DB_HOST', 'localhost');
+  define('DB_USER', 'jmgarcia');
+  define('DB_PASS', 'P38086586n');
+  define('DB_NAME', 'd2016_jmgarcia');
+  define('DB_CHAR', 'utf8');
 
-    define('TABLES_PREFIX', '');
+  define('TABLES_PREFIX', '');
 
-    define('MAIL_FROM', 'admin@bimagenes.hol.es'); 
- 
+  define('MAIL_FROM', 'admin@bimagenes.hol.es');
+
+ */
+/*
+ * Config hostinger
+ * 
+  define('BASE_URL', 'http://bimagenes.hol.es/'); //Para acceder a archivos desde las vistas
+  define('DB_HOST', 'localhost');
+  define('DB_USER', 'u667159124_usu');
+  define('DB_PASS', 'Pa$$word');
+  define('DB_NAME', 'u667159124_banco');
+  define('DB_CHAR', 'utf8');
+
+  define('TABLES_PREFIX', '');
+
+  define('MAIL_FROM', 'admin@bimagenes.hol.es');
  */
 
 
@@ -62,6 +76,10 @@ define('USUARIO_ROL_USUARIO', 1);
 define('DEFAULT_ROLE', 3); //Ojo el 3 significa usuario en la tabla rol
 
 define('REGISTROS_POR_PAGINA', 5);
+
+define('REGISTROS_POR_PAGINA_LIST', REGISTROS_POR_PAGINA);
+define('REGISTROS_POR_PAGINA_CARD', 10);
+define('REGISTROS_POR_PAGINA_TABLE', 7);
 
 //Los niveles de LOG ya están definidos en el código fuente de PHP
 //define('LOG_EMERG', 0);

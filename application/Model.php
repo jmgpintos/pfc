@@ -20,10 +20,12 @@ class Model
      * @var int
      */
     protected $_lastID;
+    protected $_log;
 
     public function __construct()
     {
         $this->_db = new Database();
+        $this->_log = new Log();
     }
 
     public function getLast_id()
@@ -44,6 +46,8 @@ class Model
 
     public function getSQL($sql)
     {
+        $this->_log->write(__METHOD__ . ' - sql =>' . $sql);
+
         $row = $this->_db->query($sql);
 
         $rs = $row->fetchAll(PDO::FETCH_ASSOC);
@@ -57,13 +61,23 @@ class Model
      * @param string $table 
      * @return array RecordSet con todos los registros de $table
      */
-    public function getAll($table)
+    public function getAll($table, array $campos = array())
     {
+        $this->_log->write(__METHOD__
+                . ' - tabla =>' . $table
+                . ', campos: ' . array_to_str($campos));
 
         $table = $this->getTableName($table);
 
-        $SQL = "SELECT * FROM $table ";
+        if (count($campos)) {
+            $listaCampos = 'id, ';
 
+            $listaCampos .= implode(", ", $campos);
+        }
+        else {
+            $listaCampos = '*';
+        }
+        $SQL = "SELECT " . $listaCampos . " FROM $table ";
         $row = $this->_db->query($SQL);
 
         return $row->fetchAll(PDO::FETCH_ASSOC);
@@ -84,7 +98,6 @@ class Model
         $id = (int) $index;
         $sql = "SELECT * FROM $table WHERE id=$id";
 
-//        put($sql);
         $row = $this->_db->query($sql);
 
         return $row->fetch(PDO::FETCH_ASSOC);
@@ -100,11 +113,13 @@ class Model
      */
     public function insertarRegistro($table, array $campos)
     {
-
         $table = $this->getTableName($table);
 
-        if (in_array('creador', $this->getFields($table))) {
-            $campos[':creador'] = Session::getId();
+        if (in_array('id_usuario_creacion', $this->getFields($table))) {
+            $campos[':id_usuario_creacion'] = Session::getId();
+        }
+        if (in_array('fecha_creacion', $this->getFields($table))) {
+            $campos[':fecha_creacion'] = FechaHora::Hoy();
         }
 
         //construir SQL
@@ -118,24 +133,18 @@ class Model
 
         $sql = "INSERT INTO $table (" . rtrim($str_columnas, ', ') . ") VALUES(" . rtrim($str_campos,
                         ', ') . ")"; //el primer campo (null) es el id
-        //        vardump($campos);
-        //        put($sql);exit;
+        // 
         //ejecutar consulta
         $this->_db->prepare($sql)
                 ->execute($campos);
 
         $this->_lastID = $this->_db->lastInsertId(); //guardar ID del registro insertado
-//        put($table);
-//        put(array_to_str($campos));
-//        vardumpy($campos);
 
-        if ($table != $this->tbl_log && $table != $this->tbl_borrado) {
+        $this->_log->write(__METHOD__
+                . 'registro insertado - tabla =>' . $table
+                . ', campos: ' . array_to_str($campos));
 
-            Log::info('registro insertado',
-                    array('tabla' => $table, 'campos' => array_to_str($campos)));
-        }
-//        puty($this->_lastID);
-        return $this->_lastId;
+        return $this->_lastID;
     }
 
     /**
@@ -153,8 +162,8 @@ class Model
         $id = (int) $index;
 
         //Agregar modificador y fecha_modificacion si la tabla tiene esos campos.
-        if (in_array('modificador', $this->getFields($table))) {
-            $campos[':modificador'] = Session::getId();
+        if (in_array('id_usuario_modificacion', $this->getFields($table))) {
+            $campos[':id_usuario_modificacion'] = Session::getId();
         }
         if (in_array('fecha_modificacion', $this->getFields($table))) {
             $campos[':fecha_modificacion'] = FechaHora::Hoy();
@@ -173,10 +182,9 @@ class Model
 
         $sql = "UPDATE $table SET " . $srt_campos . " WHERE id = :id";
 
-        //put($sql);
-        //var_dump($campos);exit;
-//        Log::info('registro editado', array('tabla' => $table, 'campos' => array_to_str($campos)));
-
+        $this->_log->write(__METHOD__
+                . 'registro editado - tabla =>' . $table
+                . ', campos: ' . array_to_str($campos));
         $stmt = $this->_db->prepare($sql);
         return $stmt->execute($campos);
     }
@@ -207,28 +215,35 @@ class Model
         else {
             return false;
         }
+    }
 
+    /**
+     * Verifica si existe un registro con los datos dados
+     * 
+     * @param string $table Tabla en la que busca
+     * @param array $campos lista de campos y valores del tipo ('nombre_campo' => 'valor_campo')
+     * @return boolean
+     */
+    public function existeRegistro($table, array $campos)
+    {
 
-//        put(__METHOD__);puty($sql);
-//        if ($this->_db->query($sql)) {
-//            //Guardar registro borrado
-//            $this->insertarRegistro($tbl_borrado, $campos);
-//            Log::warning(
-//                    'registro borrado',
-//                    array(
-//                'tabla' => $table,
-//                'campos' => $string_registro_borrado,
-//            ));
-//            return true;
-//        }
-//        else {
-//            Log::notice('intento de borrado de registro',
-//                    array(
-//                'tabla' => $table,
-//                'campos' => $string_registro_borrado,
-//            ));
-//            return false;
-//        }
+        $table = $this->getTableName($table);
+
+        $condicion = '';
+
+        foreach ($campos as $k => $v) {
+            $condicion .= ltrim($k, ':') . '="' . $v . '" AND ';
+        }
+
+        $sql = "SELECT * FROM $table WHERE " . rtrim($condicion, ' AND ') . " LIMIT 1";
+
+        $row = $this->_db_->query($sql);
+
+        if ($row->fetch()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -281,11 +296,17 @@ class Model
         return $row->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Devuelve los índices del array (nombres de los campos) excepto el primero (id)
+     * @param type $data
+     * @return $array
+     */
     public function getColumnas($data)
     {
-//        put(__METHOD__);
         if (count($data)) {
-            return array_keys($data[0]);
+            $keys = array_keys($data[0]);
+            array_shift($keys);
+            return $keys;
         }
         else {
             return array();
@@ -309,6 +330,21 @@ class Model
         else {
             return TABLES_PREFIX . $table;
         }
+    }
+
+    public function getTabla($table, $order = false)
+    {
+        if (!$order) {
+            $order = 'nombre';
+        }
+
+        $table = $this->getTableName($table);
+
+        $SQL = "SELECT id, nombre FROM {$table} ORDER BY {$order}";
+
+        $row = $this->_db->query($SQL);
+
+        return $row->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function borrarPruebas($tabla, $id_minimo)

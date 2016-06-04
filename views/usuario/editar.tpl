@@ -41,8 +41,8 @@
             {/if}
             <div class="padding-16 margin-top topbar border-blue">
                 <div class='right'>
-                    <input class='btn blue' type="submit" value="Enviar">
-                    <a class='btn red' href='{$_layoutParams.root}usuario/index/{$_pagina}'>Cancelar</a>
+                    <input class='btn blue round' type="submit" value="Enviar">
+                    <a class='btn red round' href='{$_layoutParams.root}usuario/index/{$_pagina}'>Cancelar</a>
                 </div>
             </div>
         </form>

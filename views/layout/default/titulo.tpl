@@ -1,4 +1,4 @@
-<div class="container blue">
+<div class="container blue ">
 <h2>
     {if isset($tituloView)}
         {$tituloView}

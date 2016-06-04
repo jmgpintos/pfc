@@ -16,8 +16,12 @@ class Log
     public function write($message, $level = LOG_INFO)
     {
         if ($level <= LOG_LEVEL) {
-            $usuario = Session::get('id_usuario');
-
+            if(Session::estaAutenticado()) {
+                $usuario = Session::get('id_usuario');
+            }
+            else {
+                $usuario = 'No autenticado';
+            }
             $handle = fopen($this->_filename, 'a+');
 
             fwrite($handle,

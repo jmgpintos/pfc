@@ -16,6 +16,7 @@ class usuarioController extends Controller
         $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
 
         $pagina = $this->getNumPagina($pagina);
+        $this->_view->setJs(array('confirmarBorrar', 'validacion'));
 
         $this->asignarMensajes();
 
@@ -25,12 +26,13 @@ class usuarioController extends Controller
 
 //        vardumpy($data);
         $this->_view->assign('data', $data);
-        $this->_view->assign('paginacion',
-                $paginador->getView('paginacion', $this->_modulo . '/index'));
+        $this->ponerPaginacion($paginador, $this->_tabla);
         $this->_view->assign('columnas', $this->_model->getColumnas($data));
         $this->_view->assign('cuenta', $this->_model->getCount($this->_tabla));
         $this->_view->assign('titulo', 'Usuarios');
         $this->_view->assign('tituloView', 'Lista de usuarios');
+        $this->_view->assign('controlador', $this->_modulo. '/');
+        
         $this->_view->renderizar('index', $this->_modulo);
     }
 
@@ -158,7 +160,7 @@ class usuarioController extends Controller
             $this->_log->write('ERROR AL BORRAR USUARIO -' . $data['id'] . " - " . $data['username']);
         }
 
-        $this->redireccionar($this->_modulo);
+        $this->redireccionar($this->_modulo . '/index/' . Session::get('pagina'));
     }
 
     public function nuevoUsuarioAuto()

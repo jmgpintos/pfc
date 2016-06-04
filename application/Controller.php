@@ -17,6 +17,7 @@ abstract class Controller
     {
         $this->_view = new View(new Request);
         $this->_log = new Log();
+        Session::tiempo(); //Actualiza tiempo de sesión cada vez que entra en una página
     }
 
     abstract public function index();
@@ -173,8 +174,56 @@ abstract class Controller
             $this->_view->assign('_error', Session::getError());
             Session::destroy('error');
         }
-        
+
         $this->_view->assign('_pagina', Session::get('pagina'));
+    }
+
+    public function ponerPaginacion($paginador, $tabla, $registros = REGISTROS_POR_PAGINA)
+    {
+        if ($this->_model->getCount($tabla) > $registros) {
+            $this->_view->assign('paginacion',
+                    $paginador->getView('paginacion', $this->_modulo . '/index'));
+        }
+    }
+
+    /**
+     * Devuelve array para colocar en combo
+     * 
+     * @param string $tabla Tabla de la que se leen los datos
+     * @param string $primeraOpcion Opción para el primer valor del combo (devuelve valor nulo)
+     * 
+     * @return array
+     */
+    protected function pasarTablaACombo($tabla, $primeraOpcion = '', $hayPrimeraOpcion = TRUE)
+    {
+        $r = $this->_model->getTabla($tabla, 'nombre');
+        if ($hayPrimeraOpcion) {
+            array_unshift($r,
+                    array(
+                'id' => '0',
+                'nombre' => $primeraOpcion));
+        }
+        return $r;
+    }
+
+    /**
+     * Devuelve array para colocar en combo
+     * 
+     * @param string $tabla Tabla de la que se leen los datos
+     * @param string $primeraOpcion Opción para el primer valor del combo (devuelve valor nulo)
+     * 
+     * @return array
+     */
+    protected function pasarArrayACombo($array, $primeraOpcion = '', $hayPrimeraOpcion = TRUE)
+    {
+        $r = $array;
+        if ($hayPrimeraOpcion) {
+            array_unshift($r,
+                    array(
+                'id' => '0',
+                'nombre' => $primeraOpcion));
+        }
+        return $r;
     }
 
 }

@@ -35,6 +35,8 @@ class postController extends Controller
         $this->_view->assign('cuenta', $this->_model->getCount($this->_table));
         $this->_view->assign('titulo', 'Post');
         $this->_view->assign('tituloView', 'Últimos Posts');
+        $this->_view->assign('controlador', $this->_modulo. '/');
+        
         $this->_view->renderizar('index', $this->_modulo);
     }
 

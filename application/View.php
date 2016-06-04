@@ -42,6 +42,8 @@ class View extends Smarty
                 'mensajes' => $rutaDefaultLayout . 'mensajes.tpl',
                 'footer' => $rutaDefaultLayout . 'footer.tpl',
                 'info_debug' => $rutaDefaultLayout . 'info_debug.tpl',
+                'cabecera_tabla' => $rutaDefaultLayout . 'cabecera_tabla.tpl',
+                'paginacion' =>  $rutaDefaultLayout . 'paginacion.tpl',
             ),
             'configs' => array(
                 'app_name' => APP_NAME,
@@ -85,22 +87,22 @@ class View extends Smarty
             );
         }
 
-        $menu_usuario = array(
-            array(
-                'id' => 'inicio',
-                'titulo' => 'Inicio',
-                'enlace' => BASE_URL
-            ),
-            array(
+        $menu_usuario[] = array(
+            'id' => 'inicio',
+            'titulo' => 'Inicio',
+            'enlace' => BASE_URL
+        );
+        if (DEBUG) {
+            $menu_usuario[] = array(
                 'id' => 'post',
                 'titulo' => 'Posts',
                 'enlace' => BASE_URL . 'post'
-            ),
-            array(
-                'id' => 'imagen',
-                'titulo' => 'Imágenes',
-                'enlace' => BASE_URL . 'imagen'
-            ),
+            );
+        }
+        $menu_usuario[] = array(
+            'id' => 'imagen',
+            'titulo' => 'Imágenes',
+            'enlace' => BASE_URL . 'imagen'
         );
 
         if (Session::estaAutenticado()) {
