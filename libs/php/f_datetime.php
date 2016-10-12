@@ -1,6 +1,7 @@
 <?php
 
-class FechaHora {
+class FechaHora
+{
 
 //Arrays de nombres de días y meses
     private static $_dias = array("Domingo", "Lunes", "Martes", "Mi&eacute;rcoles", "Jueves",
@@ -79,7 +80,6 @@ class FechaHora {
      */
     public static function fechaCorta($fecha, $conAnno = true, $separador = "-")
     {
-//        $meses = self::$_meses_corto;
         //comprobar separador
         if (empty($separador) || !strpos($fecha, $separador)) {
             return false;
@@ -93,7 +93,8 @@ class FechaHora {
         //Poner mes en texto, cuidado con fechas incorrectas
         if ($mes > 0) {
             $mes_texto = self::$_meses_corto[$mes - 1];
-        } else {
+        }
+        else {
             return false;
         }
 
@@ -107,11 +108,44 @@ class FechaHora {
         $fecha_corta = $dia_texto . " " . ucwords($mes_texto);
         if ($conAnno) {
             $fecha_corta .= " " . substr($anno, -2);
-        } elseif ($conAnno == 2) {
+        }
+        elseif ($conAnno == 2) {
             $fecha_corta .= " " . $anno;
         }
 
         return $fecha_corta;
+    }
+
+    public function fechaLarga($fecha, $conAnno = true, $separador = "-")
+    {
+
+        //Separamos la fecha en día, mes y año
+        $array_fecha = explode($separador, $fecha);
+        $anno = $array_fecha[0];
+        $mes = $array_fecha[1];
+        $dia = $array_fecha[2];
+
+        //Poner mes en texto, cuidado con fechas incorrectas
+        if ($mes > 0) {
+            $mes_texto = self::$_meses[$mes - 1];
+        }
+        else {
+            return false;
+        }
+
+        //Quitar 0 inicial del día
+        $dia_texto = $dia;
+        if ($dia < 10) {
+            $dia_texto = substr($dia, -1);
+        }
+
+        //Construimos la cadena de fecha
+        $fecha_larga = $dia_texto . " de " . ucwords($mes_texto);
+        if ($conAnno) {
+            $fecha_larga .= " de " . $anno;
+        }
+
+        return $fecha_larga;
     }
 
     /**
@@ -145,7 +179,8 @@ class FechaHora {
             $today = new DateTime('today');
             $age = $birthdate->diff($today)->y;
             return $age;
-        } else {
+        }
+        else {
             return 0;
         }
     }
@@ -205,7 +240,8 @@ class FechaHora {
 //        $fin = '2015-07-23';
         if ($mes_largo) {
             $meses = self::$_meses;
-        } else {
+        }
+        else {
             $meses = self::$_meses_corto;
         }
 
@@ -245,6 +281,23 @@ class FechaHora {
     public static function lunesAnterior()
     {
         return date("Y-m-d", strtotime('monday last week'));
+    }
+
+    /**
+     * Convierte un string de tipo datetime SQL a fecha hora en el formato Y-m-d - H:i:s
+     * 
+     * @param string $fechaHora (Ej: "2016-09-13 15:11:28")
+     * @return string
+     */
+    public function mySqlDateTimeToPHP($fechaHora)
+    {
+        if(!$fechaHora || !is_string($fechaHora)){
+            return null;
+        }
+        $time = strtotime($fechaHora);
+        $fecha = date("Y-m-d", $time);
+        $hora = date("H:i:s", $time);
+        return self::fechaCorta($fecha) . " - " . $hora;
     }
 
 }

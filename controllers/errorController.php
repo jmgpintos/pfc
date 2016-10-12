@@ -37,7 +37,7 @@ class errorController extends Controller
         }
 
         $error['default'] = 'Ha ocurrido un error y la página no puede mostrarse';
-        $error['5050'] = 'Acceso restringido';
+        $error['5050'] = 'Acceso restringido<hr>No tiene permiso para acceder a esta página';
         $error['8080'] = 'Tiempo de sesión excedido';
 
         if (array_key_exists($codigo, $error)) {

@@ -13,16 +13,35 @@
                 {else}
                     {$col=$col+1}
                 {/if} 
-
+                <script>
+                    $(){
+                    $(".imagen-card").on("hover", function () {
+                        onhover = "mostrarInfo()"
+                        }
+                        
+                        function mostrarInfo() {
+                            console.log(this);
+                            var el = "#" + imagen + " .info";
+                            $(el).toggleClass("hide")
+                        }
+                    }
+                </script>
                 <div class="third">
-                    <div class="card-2"> <a 
+                    <div id="r{$row}c{$col}" class="card-2 imagen-card" >
+                        <a 
                             href="{$_layoutParams.root}public/img/fotos/{$it.nombre_fichero}" 
                             target="_blank"
                             >
-                            <img id="r{$row}c{$col}" src="{$_layoutParams.root}public/img/fotos/{$it.nombre_fichero}" style="width:100%">
+                            <img                                 
+                                src="{$_layoutParams.root}public/img/fotos/{$mids_dir}{$mid_prefix}{$it.nombre_fichero}" 
+                                style="width:100%"
+                                >
                         </a>
                         <div class="container">
                             <h4>{$it.nombre}</h4>
+                        </div>
+                        <div class="info hide">
+                            XXXXXXXXXXXXXX
                         </div>
                     </div>
                 </div>

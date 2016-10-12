@@ -21,6 +21,24 @@ class categoriaModel extends Model
 
         return $this->getSQL($sql);
     }
+    
+    public function getImagesByCategory($idCategoria)
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria AND i.id_categoria = $idCategoria ORDER BY nombre; ";
+        $row = $this->_db->query($SQL);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC);
+        
+    }
+    public function getCategoryName($idCategoria)
+    {
+        $row = parent::getById('categoria', $idCategoria);
+        
+        return $row["nombre"];
+        
+    }
 
     public function poblarComboCategoria()
     {

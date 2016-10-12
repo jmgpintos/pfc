@@ -1,5 +1,5 @@
 {if isset($paginacion)}
-    <div class="padding-16 margin-top center blue-grey">
+    <div class="">
         {$paginacion}
     </div>
 {/if}

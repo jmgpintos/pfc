@@ -8,57 +8,83 @@ class categoriaController extends Controller
 
     public function __construct()
     {
+        $this->_modulo = $this->_k;
         parent::__construct();
         $this->_log->write(__METHOD__, LOG_DEBUG);
         $this->_model = $this->loadModel($this->_k);
         $this->_tabla = $this->_k;
-        $this->_modulo = $this->_k;
         $this->_cmbCategorias = $this->_model->poblarComboCategoria();
     }
 
     public function index($pagina = false)
     {
         $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
+        Session::acceso('especial');
 
         $pagina = $this->getNumPagina($pagina);
 
         $this->_view->setJs(array('confirmarBorrar'));
 
+        $this->getLibrary('paginador');
+        $paginador = new Paginador();
+        $data = $paginador->paginar($this->_model->getTablaCategorias(), $pagina);
+        $this->ponerPaginacion($paginador, $this->_tabla);
 
-        $this->_prepararVista();
+        $prepararVista = array(
+            'data' => $data,
+            'columnas' => array('Nombre', 'Categoría Padre'),
+            'cuenta' => $this->_model->getCount($this->_tabla),
+        );
+        $this->ponerBtnNuevo();
+
+        $this->_prepararVista(__FUNCTION__, $prepararVista);
+        $this->_view->renderizar('index', $this->_modulo);
+    }
+
+    public function ver($idCategoria, $pagina = false)
+    {
+        $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
+
+        $pagina = $this->getNumPagina($pagina);
+
 
         $this->getLibrary('paginador');
         $paginador = new Paginador();
-//        $campos = array('nombre', 'descripcion', 'id_categoria');
-        $data = $paginador->paginar($this->_model->getTablaCategorias(), $pagina);
+        $campos = array('nombre', 'nombre_fichero', 'ancho_px');
+        $data = $paginador->paginar($this->_model->getImagesByCategory($idCategoria), $pagina, IMAGENES_POR_PAGINA);
 
-        $this->_view->assign('data', $data);
-        $this->ponerPaginacion($paginador, $this->_tabla);
-        $this->_view->assign('columnas', array('Nombre', 'Categoría Padre'));
-        $this->_view->assign('cuenta', $this->_model->getCount($this->_tabla));
-        $this->_view->assign('tituloView', 'Lista de categorías');
-
-        $this->_view->renderizar('index', $this->_modulo);
+        $this->asignarMensajes();
+//        $this->textos['tituloView']['ver'] = '';  
+        $prepararVista = array(
+            'data' => $data,
+            "titulo" => "Categoría: " . capitalizar($this->_model->getCategoryName($idCategoria)),
+            'columnas' => array('Nombre', 'Categoría Padre'),
+            'cuenta' => $this->_model->getCount($this->_tabla),
+        );
+        $this->_prepararVista(__FUNCTION__, $prepararVista);
+            $this->_view->assign('paginacion',
+                    $paginador->getView('paginacion', $this->_modulo . '/ver/' . $idCategoria ));
+//        vardumpy("FIN");
+//        $this->_view->assign('titulo', "Imágenes de la categoría: " . $this->_model->getCategoryName($idCategoria));
+        $this->_view->renderizar('ver', 'inicio');
     }
 
     public function editar($id)
     {
         $this->_log->write(__METHOD__, LOG_DEBUG);
-
-        $this->_prepararVista();
-
-        $this->_view->assign('tituloView', 'Editar categoría');
+        Session::acceso('especial');
 
         if ($this->getInt('guardar') == 1) {
             $this->_view->assign('datos', $_POST); //TODO limpiar $_POST
-            $this->validar(ACCION_EDITAR);
+            $this->_validar(ACCION_EDITAR);
 
             //guardar datos
             $campos = array(
-                'nombre' => $this->getAlphaNum('nombre'),
+                'nombre' => $this->getPostParam('nombre'),
                 'descripcion' => $this->getPostParam('descripcion'),
             );
-            if ($this->getInt('id_categoria') != 0) {//Si no tiene padre no pasamos el 0
+
+            if ($this->getInt('id_categoria') != 0) {//Si no tiene padre NO pasamos el 0
                 $campos['id_categoria'] = $this->getInt('id_categoria');
             }
 
@@ -70,28 +96,28 @@ class categoriaController extends Controller
             $this->redireccionar($this->_modulo);
         }
 
-        $data = $this->_model->getById($this->_tabla, $this->filtrarInt($id));
-        $this->_view->assign('data', $data);
-//        vardumpy($this->_cmbCategorias);
+        $prepararVista = array(
+            'data' => $this->_model->getById($this->_tabla, $this->filtrarInt($id)),
+        );
 
+        $this->_prepararVista(__FUNCTION__, $prepararVista);
         $this->_view->renderizar('editar', $this->_modulo);
     }
 
     public function nuevo()
     {
-        $this->_log->write(__METHOD__, LOG_DEBUG);
-        $this->_prepararVista();
         Session::acceso('especial');
-        $this->_view->assign('tituloView', "Nueva categoría");
-        $this->_view->setJs(array('validacion'));
+        $this->_log->write(__METHOD__, LOG_DEBUG);
 
-//
+        $this->_view->setJs(array('validacion'));
+        $this->_prepararVista(__FUNCTION__);
+
         if ($this->getInt('guardar') == 1) {
             $this->_view->assign('datos', $_POST); //TODO limpiar $_POST
 
-            $this->validar(ACCION_NUEVO);
+            $this->_validar(ACCION_NUEVO);
             $campos = array(
-                'nombre' => $this->getAlphaNum('nombre'),
+                'nombre' => $this->getPostParam('nombre'),
                 'descripcion' => $this->getPostParam('descripcion'),
             );
             if ($this->getInt('id_categoria') != 0) {//Si no tiene padre no pasamos el 0
@@ -101,11 +127,10 @@ class categoriaController extends Controller
 
 
             Session::setMensaje('La categoría ha sido creada correctamente');
-            $this->_log->write('NUEVA CATEGORIA', LOG_NOTICE);
+            $this->_log->write('NUEVA CATEGORIA: ' . array_to_str($campos), LOG_NOTICE);
             $this->redireccionar($this->_modulo);
         }
 
-        $this->_view->assign('categorias', $this->_cmbCategorias);
         $this->_view->renderizar('nuevo', $this->_modulo);
     }
 
@@ -128,7 +153,7 @@ class categoriaController extends Controller
                     LOG_NOTICE);
         }
         else {
-            Session::setError('Se ha producido un error al borrar la categoría <strong>"' 
+            Session::setError('Se ha producido un error al borrar la categoría <strong>"'
                     . $data['nombre'] . '"</strong>');
             $this->_log->write('ERROR AL BORRAR CATEGORIA -' . $data['id'] . " - " . $data['nombre']);
         }
@@ -144,14 +169,14 @@ class categoriaController extends Controller
         $this->redireccionar($this->_modulo);
     }
 
-    private function validar($accion)
+    private function _validar($accion)
     {
         $this->_log->write(__METHOD__ . ' ' . $accion, LOG_DEBUG);
 
         $error = false;
         $mensaje = null;
 
-        if (!$this->getAlphaNum('nombre')) {
+        if (!$this->getPostParam('nombre')) {
             $mensaje = 'Debe introducir un nombre de categoría';
             $error = true;
         }
@@ -164,12 +189,10 @@ class categoriaController extends Controller
         }
     }
 
-    private function _prepararVista()
+    protected function _prepararVista($metodo, $preparaVista = array())
     {
-        $this->asignarMensajes();
-        $this->_view->assign('titulo', 'Categorías');
+        parent::_prepararVista($metodo, $preparaVista);
         $this->_view->assign('categorias', $this->_cmbCategorias);
-        $this->_view->assign('controlador', $this->_modulo . '/');
     }
 
 }

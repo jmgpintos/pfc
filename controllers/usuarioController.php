@@ -14,6 +14,7 @@ class usuarioController extends Controller
     public function index($pagina = false)
     {
         $this->_log->write(__METHOD__ . ' pagina=' . $pagina, LOG_DEBUG);
+        Session::acceso('especial');
 
         $pagina = $this->getNumPagina($pagina);
         $this->_view->setJs(array('confirmarBorrar', 'validacion'));
@@ -23,16 +24,20 @@ class usuarioController extends Controller
         $this->getLibrary('paginador');
         $paginador = new Paginador();
         $data = $paginador->paginar($this->_model->getAllUsuarios(), $pagina);
-
-//        vardumpy($data);
+        $f = new FechaHora();
+//        vardumpy($data[0]);
+        for ($i = 0; $i < count($data); $i++) {
+                $data[$i]['ultimo_acceso'] = $f->mySqlDateTimeToPHP($data[$i]['ultimo_acceso']);
+        }
+//        vardumpy($data[0]);
         $this->_view->assign('data', $data);
         $this->ponerPaginacion($paginador, $this->_tabla);
         $this->_view->assign('columnas', $this->_model->getColumnas($data));
         $this->_view->assign('cuenta', $this->_model->getCount($this->_tabla));
         $this->_view->assign('titulo', 'Usuarios');
         $this->_view->assign('tituloView', 'Lista de usuarios');
-        $this->_view->assign('controlador', $this->_modulo. '/');
-        
+        $this->_view->assign('controlador', $this->_modulo . '/');
+
         $this->_view->renderizar('index', $this->_modulo);
     }
 
@@ -140,6 +145,7 @@ class usuarioController extends Controller
     {
         $id = $this->filtrarInt($id);
         $this->_log->write(__METHOD__, LOG_DEBUG);
+        Session::acceso('admin');
 
         if (!($data = $this->_model->getById($this->_tabla, $id))) {
             Session::setError('El Usuario con id #' . $id . ' no existe');
@@ -149,7 +155,7 @@ class usuarioController extends Controller
         if ($this->_model->eliminarRegistro($this->_tabla, $id)) {
             Session::setMensaje(
                     "El Usuario # " . $data['id'] . " - <strong>" . $data['username'] . "</strong>"
-                    . " correspondiente a <i>" . $data['nombre'] . " " . $data['apellidos']. "</i>"
+                    . " correspondiente a <i>" . $data['nombre'] . " " . $data['apellidos'] . "</i>"
                     . " ha sido borrado correctamente");
 
             $this->_log->write('BORRAR USUARIO -' . $data['id'] . " - " . $data['username'],

@@ -29,10 +29,82 @@ class imagenModel extends Model
     {
         $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
                 . "FROM imagen i, licencia l, categoria c "
-                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria; ";
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria "
+                . "ORDER BY id";
         $row = $this->_db->query($SQL);
         
         return $row->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Recuperar todos los registros de la tabla $table ordenados aleatoriamente
+     * Se usa para la frontpage
+     * 
+     * @param string $table 
+     * @return array RecordSet con todos los registros de $table
+     */
+     public function getAllFrontPage($table='imagen', array $campos = array())
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria ORDER BY rand(); ";
+        $row = $this->_db->query($SQL);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    /**
+     * Devuelve un "objeto" imagen random
+     * 
+     * @return array
+     */
+    public function getImageForFrontPage()
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria ORDER BY rand() LIMIT 1; ";
+        $row = $this->_db->query($SQL);
+        
+        $res =  $row->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $res[0];
+        
+    }
+    
+    /**
+     * Recupera la imagen con el id indicado
+     * 
+     * @param type $idImagen
+     * @return type
+     */
+    public function getById($tabla, $idImagen)
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria AND i.id= " . $idImagen;
+        
+        $row = $this->_db->query($SQL);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC);        
+        
+    }
+    
+    /**
+     * Recupera todos las imágenes de una categoría
+     * 
+     * @param type $idCategoria
+     * @return type
+     */
+    
+    public function getByCategory($idCategoria)
+    {
+        $SQL = "SELECT i.*, c.nombre categoria, l.nombre licencia "
+                . "FROM imagen i, licencia l, categoria c "
+                . "WHERE l.id=i.id_licencia AND c.id=i.id_categoria AND i.id_categoria = $idCategoria; ";
+        $row = $this->_db->query($SQL);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC);
+        
     }
 
     public function insertarImagen($nombre, $imagen)

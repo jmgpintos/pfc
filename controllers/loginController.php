@@ -56,7 +56,7 @@ class loginController extends Controller
             $error = true;
         }
         else if (!$this->getSql('pass')) {
-            $mensaje = 'Debe introducir un password';
+            $mensaje = 'Debe introducir una contraseña';
             $error = true;
         }
 
@@ -66,7 +66,7 @@ class loginController extends Controller
 
         if (!$error) {
             if (!$row) {
-                $mensaje = 'Usuario y/o password incorrecto';
+                $mensaje = 'Usuario y/o contraseña incorrectos';
                 $error = true;
             }
             else if ($row['estado'] != 1) {

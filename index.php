@@ -32,6 +32,7 @@ try {
     Session::init();
 
     $r = new Request();
+//    vardumpy($r);
 
 //    put($r->getControlador());
 //    put($r->getMetodo());

@@ -6,6 +6,10 @@ define('DIR_LOGS', DIR_PATH . "/logs/");
 class Log
 {
 
+    /**
+     * 
+     * @var String Nombre del fichero de log
+     */
     private $_filename;
 
     public function __construct($_filename = 'log.txt')
@@ -13,10 +17,16 @@ class Log
         $this->_filename = DIR_LOGS . $_filename;
     }
 
-    public function write($message, $level = LOG_INFO)
+    /**
+     * Agrega líneas al archivo de log
+     * 
+     * @param type $message
+     * @param type $level Nivel mínimo para guardar los mensajes
+     */
+    public function write($message, $level = LOG_NOTICE)
     {
         if ($level <= LOG_LEVEL) {
-            if(Session::estaAutenticado()) {
+            if (Session::estaAutenticado()) {
                 $usuario = Session::get('id_usuario');
             }
             else {

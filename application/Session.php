@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Clase Session
+ * 
+ * Métodos para leer y escribir variables de sesión
+ * Métodos para controlar niveles de acceso
+ * 
+ */
+
 class Session
 {
 
@@ -38,7 +46,7 @@ class Session
 
     /**
      * Establece el valor de una variable de sesión
-     * @param type $clave Nombre de la variable
+     * @param string $clave Nombre de la variable
      * @param type $valor Valor de la variable
      */
     public static function set($clave, $valor)
@@ -50,7 +58,7 @@ class Session
 
     /**
      * Recupera el valor de una variable de sessión
-     * @param type $clave Nombre de la variable
+     * @param string $clave Nombre de la variable
      * @return type Valor de la variable
      */
     public static function get($clave = false)
@@ -68,6 +76,11 @@ class Session
         }
     }
 
+    /**
+     * Devuelve el id del usuario autenticado
+     * 
+     * @return int
+     */
     public function getId()
     {
         if (self::estaAutenticado()) {
@@ -88,20 +101,33 @@ class Session
         return false;
     }
 
+    /**
+     * Devuelve true si el usuario autenticado tiene el perfil de ADMIN
+     * 
+     * @return boolean
+     */
     public static function esAdmin()
     {
         return(Session::getLevel(Session::get('level')) == USUARIO_ROL_ADMIN);
     }
 
+    /**
+     * Devuelve true si el usuario autenticado tiene el perfil de ESPECIAL
+     * 
+     * @return boolean
+     */
     public static function esEspecial()
     {
         return(Session::getLevel(Session::get('level')) == USUARIO_ROL_ESPECIAL);
     }
 
+    /* METODOS PARA LEER/ESCRIBIR MENSAJES Y ERRORES */
+
     //mensaje y error son variables de sesión para pasar mensajes 
     //entre vistas al usar la función redireccionar
     /**
      * Establece el valor  del mensaje
+     * 
      * @param string $msg Texto del mensaje
      */
     public static function setMensaje($msg, $tipo = 'mensaje')
@@ -145,9 +171,14 @@ class Session
         return false;
     }
 
+    /* FIN METODOS PARA LEER/ESCRIBIR MENSAJES Y ERRORES */
+
+    /* METODOS PARA CONTROLAR ACCESO */
+
     /**
+     * Controla el acceso a los métodos según perfil de usuario
      * 
-     * @param type $level Nivel de usuario mínimo requerido para tener permiso
+     * @param string $level Nivel de usuario mínimo requerido para tener permiso
      */
     public static function acceso($level)
     {
@@ -256,6 +287,8 @@ class Session
         return false;
     }
 
+    /* FIN METODOS PARA CONTROLAR ACCESO */
+
     /**
      * Comprueba si ha caducado el tiempo de sesión.
      * En caso de que haya caducado, envía a una página de error.
@@ -265,7 +298,7 @@ class Session
      */
     public static function tiempo()
     {
-        if(self::estaAutenticado()) {
+        if (self::estaAutenticado()) {
             if (!Session::get('tiempo') || !defined('SESSION_TIME')) {
                 throw new Exception('No se ha definido el tiempo de sesión');
             }

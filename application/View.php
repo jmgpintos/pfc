@@ -44,6 +44,8 @@ class View extends Smarty
                 'info_debug' => $rutaDefaultLayout . 'info_debug.tpl',
                 'cabecera_tabla' => $rutaDefaultLayout . 'cabecera_tabla.tpl',
                 'paginacion' =>  $rutaDefaultLayout . 'paginacion.tpl',
+                'navegacion' =>  $rutaDefaultLayout . 'navegacion.tpl',
+                'lista_imagenes' =>  $rutaDefaultLayout . 'lista_imagenes.tpl',
             ),
             'configs' => array(
                 'app_name' => APP_NAME,
@@ -91,6 +93,7 @@ class View extends Smarty
             'id' => 'inicio',
             'titulo' => 'Inicio',
             'enlace' => BASE_URL
+//            'enlace' => "/"
         );
         if (DEBUG) {
             $menu_usuario[] = array(

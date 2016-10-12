@@ -5,15 +5,27 @@ class Paginador
 
     private $_datos;
     private $_paginacion;
+    private $_limite = 5;
 
     public function __construct()
     {
         $this->_datos = array();
         $this->_paginacion = array();
     }
-
+/**
+ * 
+ * @param type $query: resultado de la consulta a paginar (todos los registros)
+ * @param type $pagina: pagina actual
+ * @param type $limite: registros por página
+ * @param type $paginacion
+ * @return type
+ */
     public function paginar($query, $pagina = false, $limite = false, $paginacion = false)
     {
+//        vardump($query);
+//        vardump($pagina);
+//        vardump($limite);
+//        vardumpy($paginacion);
         if ($limite && is_numeric($limite)) {
             $limite = $limite;
         }
@@ -56,15 +68,18 @@ class Paginador
             $paginacion['ultimo'] = '';
             $paginacion['siguiente'] = '';
         }
+//        vardump($paginacion);
 
         $this->_paginacion = $paginacion;
-        $this->_rangoPaginacion($paginacion);
+//        $this->_rangoPaginacion($paginacion);
+        $this->_rangoPaginacion($this->_limite);
 
         return $this->_datos;
     }
 
     private function _rangoPaginacion($limite = false)
     {
+//        vardumpy($limite);
         if ($limite && is_numeric($limite)) {
             $limite = $limite;
         }
@@ -124,7 +139,10 @@ class Paginador
 
         if ($link) {
             $link = BASE_URL . $link . '/';
+        }else{
+            $link = BASE_URL;
         }
+        
 
         if (is_readable($rutaView)) {
             ob_start();

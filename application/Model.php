@@ -22,19 +22,34 @@ class Model
     protected $_lastID;
     protected $_log;
 
+    /**
+     * Constructor por defecto
+     * instancia un objeto para acceder a la base de datos
+     * instancia un objeto para poder escribir en el archivo log
+     */
     public function __construct()
     {
         $this->_db = new Database();
         $this->_log = new Log();
     }
 
+    /**
+     * Devuelve el id del último registro insertado
+     * @return int
+     */
     public function getLast_id()
     {
         return $this->_lastID;
     }
 
+    /**
+     * Devuelve el total de registros de la tabla
+     * @param String $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @return int
+     */
     public function getCount($table)
     {
+        $this->_log->write(__METHOD__ . ' - table =>' . $table);
         $table = $this->getTableName($table);
 
         $SQL = "SELECT count(*) FROM $table ";
@@ -44,6 +59,11 @@ class Model
         return $row->fetch()[0];
     }
 
+    /**
+     * Devuelve un array con los resultados de una consulta SQL
+     * @param String $sql Consulta SQL
+     * @return array
+     */
     public function getSQL($sql)
     {
         $this->_log->write(__METHOD__ . ' - sql =>' . $sql);
@@ -56,16 +76,17 @@ class Model
     }
 
     /**
-     * Recuperar todos los registros de la tabla $table
+     * Lee todos los registros 
      * 
-     * @param string $table 
-     * @return array RecordSet con todos los registros de $table
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @return array
      */
     public function getAll($table, array $campos = array())
     {
         $this->_log->write(__METHOD__
                 . ' - tabla =>' . $table
-                . ', campos: ' . array_to_str($campos));
+                . ', campos: ' . array_to_str($campos)
+                );
 
         $table = $this->getTableName($table);
 
@@ -77,21 +98,25 @@ class Model
         else {
             $listaCampos = '*';
         }
-        $SQL = "SELECT " . $listaCampos . " FROM $table ";
+        $SQL = "SELECT " . $listaCampos . " FROM $table ORDER BY id";
         $row = $this->_db->query($SQL);
 
         return $row->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Recuperar el registro de la tabla $table con id = $id
+     * Lee un registro
      * 
-     * @param type $table
-     * @param type $index
-     * @return array RecorSet con el registro solicitado
+     * @param String $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @param int $index valor del campo 'id' del registro buscado
+     * @return array 
      */
     public function getById($table, $index)
     {
+        $this->_log->write(__METHOD__
+                . ' - tabla => ' . $table
+                . ' index => ' . $index
+                );
 
         $table = $this->getTableName($table);
 
@@ -104,15 +129,16 @@ class Model
     }
 
     /**
-     * Inserta un registro en la tabla $table con los valores de $campos
+     * Inserta un registro
      * $table es una tabla cuyo primer campo es un id autonumerico
+     * modifica el valor de $this->_lastID 
      * 
-     * @param string $table tabla en la que se inserta el registro
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
      * @param array $campos lista de campos y valores del tipo (':nombre_campo' => 'valor_campo')
-     * @return int id del registro insertado
+     * @return int valor del campo 'id' del registro insertado
      */
     public function insertarRegistro($table, array $campos)
-    {
+    {        
         $table = $this->getTableName($table);
 
         if (in_array('id_usuario_creacion', $this->getFields($table))) {
@@ -141,22 +167,22 @@ class Model
         $this->_lastID = $this->_db->lastInsertId(); //guardar ID del registro insertado
 
         $this->_log->write(__METHOD__
-                . 'registro insertado - tabla =>' . $table
+                . ' registro insertado - tabla =>' . $table
                 . ', campos: ' . array_to_str($campos));
 
         return $this->_lastID;
     }
 
     /**
-     * Actualiza el registro con id = $id en la tabla $table con los valores de $campos
+     * Actualiza un registro
      * 
-     * @param string $table tabla en la que se inserta el registro
-     * @param int $index PK del registro a editar
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @param int $index valor del campo 'id' del registro a editar
      * @param array $campos  lista de campos y valores del tipo (':nombre_campo' => 'valor_campo')
-     * @return //TODO
+     * @return array
      */
     public function editarRegistro($table, $index, array $campos)
-    {
+    {        
         $table = $this->getTableName($table);
 
         $id = (int) $index;
@@ -183,22 +209,29 @@ class Model
         $sql = "UPDATE $table SET " . $srt_campos . " WHERE id = :id";
 
         $this->_log->write(__METHOD__
-                . 'registro editado - tabla =>' . $table
+                . ' registro editado - tabla =>' . $table
+                . ', index => ' . $index
                 . ', campos: ' . array_to_str($campos));
+        
         $stmt = $this->_db->prepare($sql);
         return $stmt->execute($campos);
     }
 
     /**
-     * Elimina el registro con PK $id de la tabla $table
+     * Elimina un registro
      * 
-     * @param string $table Tabla de la que se borra el registro
-     * @param int $index PK del registro a borrar
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @param int $index valor del campo 'id' del registro a borrar
      * 
-     * return bool
+     * return boolean|array si error -> false|array con los valores del registro borrdo
      */
     public function eliminarRegistro($table, $index)
     {
+        $this->_log->write(__METHOD__
+                . ' - tabla =>' . $table
+                . ', index => ' . $index
+                );
+        
         $table = $this->getTableName($table);
 
         $id = (int) $index;
@@ -220,12 +253,16 @@ class Model
     /**
      * Verifica si existe un registro con los datos dados
      * 
-     * @param string $table Tabla en la que busca
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
      * @param array $campos lista de campos y valores del tipo ('nombre_campo' => 'valor_campo')
-     * @return boolean
+     * @return boolean 
      */
     public function existeRegistro($table, array $campos)
     {
+        $this->_log->write(__METHOD__
+                . ' - tabla =>' . $table
+                . ', campos: ' . array_to_str($campos)
+                );
 
         $table = $this->getTableName($table);
 
@@ -247,11 +284,15 @@ class Model
     }
 
     /**
-     * Cambia la fecha delúltimo acceso del usuario con id $index
-     * @param type $indexid del usuario
+     * Cambia la fecha del último acceso del usuario con id $index
+     * @param type $index id del usuario
      */
     public function cambiarUltimoAcceso($index)
     {
+        $this->_log->write(__METHOD__
+                . ' - index => ' . $index
+                );
+        
         $id = (int) $index;
 
         $table = TABLES_PREFIX . 'usuario';
@@ -265,9 +306,70 @@ class Model
     }
 
     /**
-     * Devuelve un array con los nombres de los capos de la tabla $table
-     * @param string $table Nombre de la tabla
-     * @return array Nombre de los campos de $table
+     * Devuelve los índices del array (nombres de los campos) excepto el primero (id)
+     * útil para cabeceras de tabla
+     * @param type $data 
+     * @return $array
+     */
+    public function getColumnas($data)
+    {
+        if (count($data)) {
+            $keys = array_keys($data[0]);
+            array_shift($keys);
+            return $keys;
+        }
+        else {
+            return array();
+        }
+    }
+
+    /**
+     * Agrega el prefijo al nombre de la tabla
+     * 
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @return string
+     */
+    public function getTableName($table)
+    {
+        $len_prefix = strlen(TABLES_PREFIX);
+
+        if (substr($table, 0, $len_prefix) == TABLES_PREFIX) {
+            return $table;
+        }
+        else {
+            return TABLES_PREFIX . $table;
+        }
+    }
+
+    /**
+     * Devuelve los campos id, nombre de una tabla (útil para poblar combos)
+     * 
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @param string $order cadena de ordenación SQL
+     * @return array
+     */
+    public function getTabla($table, $order = false)
+    {
+        if (!$order) {
+            $order = 'nombre';
+        }
+
+        $table = $this->getTableName($table);
+
+        $SQL = "SELECT id, nombre FROM {$table} ORDER BY {$order}";
+
+        $row = $this->_db->query($SQL);
+
+        return $row->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**INFO SOBRE TABLAS**/
+    
+    /**
+     * Devuelve un array con los nombres de los campos 
+     * 
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @return array 
      */
     public function getFields($table)
     {
@@ -296,57 +398,36 @@ class Model
         return $row->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Devuelve los índices del array (nombres de los campos) excepto el primero (id)
-     * @param type $data
-     * @return $array
-     */
-    public function getColumnas($data)
+    
+    public function primero($tabla)
     {
-        if (count($data)) {
-            $keys = array_keys($data[0]);
-            array_shift($keys);
-            return $keys;
-        }
-        else {
-            return array();
-        }
+        $sql ="SELECT id FROM $tabla ORDER BY id LIMIT 1" ;
+        
+        $row = $this->_db->query($sql);
+        
+        return $row->fetchAll(PDO::FETCH_ASSOC)[0]['id'];
+        
     }
+    
+    public function ultimo($tabla)
+    {
+        $sql ="SELECT id FROM $tabla ORDER BY id DESC LIMIT 1" ;
+        
+        $row = $this->_db->query($sql);
 
+        return $row->fetchAll(PDO::FETCH_ASSOC)[0]['id'];
+        
+    }
+     /************** TEMPORAL (para pruebas)*******************/
+    
+    
     /**
-     * Agrega el prefijo al nombre de la tabla
      * 
-     * @param string $table
-     * @return string
+     * Borrar los registros a partir de un id dado
+     * 
+     * @param string $table Nombre de la tabla con o sin prefijo (TABLES_PREFIX)
+     * @param type $id_minimo valor del campo id a partir del cual se borran los registros
      */
-    public function getTableName($table)
-    {
-
-        $len_prefix = strlen(TABLES_PREFIX);
-
-        if (substr($table, 0, $len_prefix) == TABLES_PREFIX) {
-            return $table;
-        }
-        else {
-            return TABLES_PREFIX . $table;
-        }
-    }
-
-    public function getTabla($table, $order = false)
-    {
-        if (!$order) {
-            $order = 'nombre';
-        }
-
-        $table = $this->getTableName($table);
-
-        $SQL = "SELECT id, nombre FROM {$table} ORDER BY {$order}";
-
-        $row = $this->_db->query($SQL);
-
-        return $row->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public function borrarPruebas($tabla, $id_minimo)
     {
         $post = $this->_db->query("DELETE FROM $tabla WHERE id > $id_minimo ");

@@ -13,7 +13,7 @@
                     {if (Session::accesoView('especial'))}
                         <td>
                             <a href="{$_layoutParams.root}{$controlador}editar/{$it.id}">
-                                <i class="fa fa-pencil"></i>
+                                <i class="fa fa-pencil text-primary"></i>
                             </a>
                             <a href="#"
                                onclick="confirmarBorrar('{$it.nombre}', '{$it.id}')"
@@ -53,7 +53,13 @@
         <header class="container">
             <span onclick="document.getElementById('confirmarBorrar').style.display = 'none'" 
                   class="closebtn">&times;</span>
-            <h2>Borrar registro</h2>
+            <h2>
+                {if isset($tituloEliminar)}
+                    {$tituloEliminar}
+                {else}
+                    Borrar registro
+                {/if}
+            </h2>
         </header>
         <div class="container white">
             <p>Seguro que desea borrar la categoria <span class="destacado" id="nombre-categoria"></span>?</p>

@@ -1,11 +1,10 @@
 
-{if (isset($data) && count($data))}
+{*{if (isset($data) && count($data))}
     <table class="table striped">
        
         {include file=$_layoutParams.includes.cabecera_tabla}
         {foreach item=it from=$data}
             <tr>
-{*                <td>{$it.id}</td>*}
                 <td>{$it.nombre}</td>
                 <td>
                     <a 
@@ -29,8 +28,24 @@
     No hay imágenes
 {/if}
 
-
-
-
 {include file="./footer.tpl"}
 
+*}
+
+
+ 
+<div class="row">
+    <div id="container-portada">
+
+        <div class="row">
+            {foreach item=it from=$data}                
+                {include file=$_layoutParams.includes.lista_imagenes}
+            {/foreach}
+        </div>
+
+        
+        {$paginacion}
+    </div>
+</div>
+        
+        

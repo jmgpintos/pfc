@@ -1,0 +1,161 @@
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Portada | Banco de imágenes</title>
+
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans|Titillium+Web:600" rel="stylesheet">
+        <link rel="stylesheet" href="http://bancodeimagenes.lan/views/layout/default/css/estilos.css">
+        <link rel="stylesheet" href="http://bancodeimagenes.lan/views/layout/default/css/responsive.css">
+        <link rel="stylesheet" href="http://bancodeimagenes.lan/views/layout/default/css/font-awesome/css/font-awesome.min.css">
+        <script src="http://bancodeimagenes.lan/public/js/jquery.js" type="text/javascript"></script>
+        <script src="http://bancodeimagenes.lan/public/js/jquery.validate.js" type="text/javascript"></script>
+
+
+    </head>
+    <body class=" light-blue">
+        <div id="main">
+            <!--includes.header-->
+
+            <div class="logo-horizontal">
+                <h1>logo horizontal</h1>
+            </div>
+
+            <nav class="sidenav">
+                <img id="titulo" src="img/logo.png" alt="Logo">
+                <ul>
+                    <li class="active">home</li>
+                    <li>login</li>
+                    <li>registro</li>
+                </ul>
+            </nav>
+            <div id="nav-mobile" class="col-tabl-6">
+                <h1>
+                    Banco de imágenes
+                    <div class="hamburger-menu">
+                        <span class="hamburger" onclick='document.getElementById("menu-mobile").style.display = "block"'></span><!-- <span class="hamburger-text">Menú</span> -->
+                    </div>
+                </h1>
+                <ul id="menu-mobile">
+                    <li class="active">home</li>
+                    <li>login</li>
+                    <li>registro</li>
+                </ul>
+
+            </div>
+
+            <!--FIN includes.header-->
+            <!--div contenido-->
+            <div id="contenido" class="container padding-xlarge white">
+                <noscript>
+                <div>Para el correcto funcionamiento de la aplicación debe activar el soporte de javascript</div>
+                </noscript>
+                <!-- includes.mensajes-->
+
+                <!-- FIN includes.mensajes-->
+                <!-- includes.titulo-->
+                <div class="container blue ">
+                    <h2>
+                        Portada
+                    </h2>
+                </div>
+                <!-- FIN includes.titulo-->
+                <!-- $_contenido-->
+
+                <div class="row">
+                    <div id="container-portada">
+
+                        <div class="row frontpage">
+                            <div class="col-desk-2 col-tbl-3">
+                                <div class="tarjeta text-center">
+                                    <div class="titulo">abstract06</div>
+                                    <img src="http://bancodeimagenes.lan/public/img/fotos/abstract06.jpg">
+                                    <div class="pie-de-foto">
+                                        <div class="tiempo">
+                                            <i class="fa fa-clock-o"></i>2016-08-24
+                                        </div>
+                                        <i class="fa  fa-info-circle"></i>
+                                        <div class="categoria">
+                                            abstract<i class="fa fa-chain"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-desk-2 col-tbl-3">
+                                <div class="tarjeta text-center">
+                                    <div class="titulo">abstract07</div>
+                                    <img src="http://bancodeimagenes.lan/public/img/fotos/abstract07.jpg">
+                                    <div class="pie-de-foto">
+                                        <div class="tiempo">
+                                            <i class="fa fa-clock-o"></i>2016-07-23
+                                        </div>
+                                        <i class="fa  fa-info-circle"></i>
+                                        <div class="categoria">
+                                            abstract<i class="fa fa-chain"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-desk-2 col-tbl-3">
+                                <div class="tarjeta text-center">
+                                    <div class="titulo">animals09</div>
+                                    <img src="http://bancodeimagenes.lan/public/img/fotos/animals09.jpg">
+                                    <div class="pie-de-foto">
+                                        <div class="tiempo">
+                                            <i class="fa fa-clock-o"></i>2016-06-23
+                                        </div>
+                                        <i class="fa  fa-info-circle"></i>
+                                        <div class="categoria">
+                                            animals<i class="fa fa-chain"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="" method="GET" >
+                            <div class="paginacion">
+                                <input class="numero-de-paginas" name="pagina" type="text" value="Página 1 de 10" onfocus="this.value = '';
+                                this.style.color = '#0e9bac';
+                                this.style.fontWeight = 'bold'" onblur="this.value = 'Página 1 de 10';
+                                        this.style.color = '#d5d5d5';
+                                        this.style.fontWeight = 'normal'" />
+                                <ul>
+                                    <li class="numero"><i class="fa fa-backward"></i></li>
+                                    <li class="numero"><i class="fa fa-chevron-left"></i></li>
+                                    <li class="numero activa">1</li>
+                                    <li class="numero">2</li>
+                                    <li class="numero">3</li>
+                                    <li class="numero">4</li>
+                                    <li class="numero">5</li>
+                                    <li class="numero"><i class="fa fa-chevron-right"></i></li>
+                                    <li class="numero"><i class="fa fa-forward"></i></li>
+                                </ul>
+                        </form>
+                    </div>
+                </div>
+                <!-- FIN $_contenido-->
+
+            </div> <!--FIN div contenido-->
+            <!-- includes.footer-->
+            <div id="footer" class="container">
+                <div  >
+                    <div id="lema" class="twothird">Proyecto Fin de Ciclo &mdash; Desarrollo de Aplicaciones Web</div>
+                    <div id="company" class='third'>José Manuel García Pintos</div>
+                </div><!--footer-->
+            </div>
+        </div><!--main-->
+        <!-- FIN includes.footer-->
+        <!-- includes.info_debug-->
+        <div id="info">
+            <strong>ROOT</strong>: /var/www/html/bi/ | <strong>BASE_URL</strong>: http://bancodeimagenes.lan/<br/>
+            <strong>SESI&OacuteN:</strong> <strong>estilo_vista_imagen:</strong> card
+            <strong>pagina:</strong> FALSE
+        </div>
+        <!-- FIN includes.info_debug-->
+
+    </body>
+</html>

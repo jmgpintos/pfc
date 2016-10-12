@@ -15,7 +15,7 @@
                     {if (Session::accesoView('especial'))}
                         <td>
                             <a href="{$_layoutParams.root}{$controlador}editar/{$it.id}">
-                                <i class="fa fa-pencil"></i>
+                                <i class="fa fa-pencil text-primary"></i>
                             </a>
                             <a href="#"
                                onclick="confirmarBorrar('{$it.nombre}', '{$it.id}')"

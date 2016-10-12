@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Clase para crear un objeto database
+ */
 class Database extends PDO
 {
 

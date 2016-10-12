@@ -1,6 +1,7 @@
 <?php
-
-if (DEBUG) {
+define('LOCAL', true);
+//define('DEBUG', false); //definido en index.php
+if (LOCAL) {
     define('BASE_URL', 'http://bancodeimagenes.lan/'); //Para acceder a archivos desde las vistas
     define('DB_HOST', 'localhost');
     define('DB_USER', 'root');
@@ -56,10 +57,11 @@ else {
 
 
 define('DEFAULT_CONTROLLER', 'index');
+define('DEFAULT_METHOD', 'index');
 define('DEFAULT_LAYOUT', 'default');
 
 define('APP_NAME', 'Banco de imágenes');
-define('APP_SLOGAN', 'Life\'s better when we\'re connected');
+define('APP_SLOGAN', 'Proyecto Fin de Ciclo &mdash; Desarrollo de Aplicaciones Web');
 define('APP_COMPANY', 'José Manuel García Pintos');
 
 define('SESSION_TIME', 15);
@@ -75,7 +77,8 @@ define('USUARIO_ROL_ESPECIAL', 2);
 define('USUARIO_ROL_USUARIO', 1);
 define('DEFAULT_ROLE', 3); //Ojo el 3 significa usuario en la tabla rol
 
-define('REGISTROS_POR_PAGINA', 5);
+define('REGISTROS_POR_PAGINA', 10);
+define('IMAGENES_POR_PAGINA', 6);
 
 define('REGISTROS_POR_PAGINA_LIST', REGISTROS_POR_PAGINA);
 define('REGISTROS_POR_PAGINA_CARD', 10);
@@ -106,6 +109,12 @@ define('ACCION_NUEVO', 'nuevo');
 //Constantes para imagenes
 define('IMAGE_FILE_PATH', ROOT . 'public' . DS . 'img' . DS . 'fotos' . DS);
 define('IMAGE_FILE_PREFIX', 'upl_');
+define('MID_DIR', 'mids' . DS);
+define('MID_FILE_PREFIX', 'mid_');
+define('MID_LONG_SIDE', 400);
+define('MID_SHORT_SIDE', 200);
+
+define('THUMBNAIL_DIR', 'thumbs' . DS);
 define('THUMBNAIL_FILE_PREFIX', 'thumb_');
 define('THUMBNAIL_LONG_SIDE', 100);
 define('THUMBNAIL_SHORT_SIDE', 70);

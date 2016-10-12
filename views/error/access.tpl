@@ -1,6 +1,6 @@
-<h2>
+<h3 id="mensaje" class="error">
         {if ($mensaje)}{$mensaje}{/if}
-</h2>
+</h3>
 
 <p>
     &nbsp;
